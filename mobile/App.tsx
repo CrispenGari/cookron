@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { FONTS, Fonts } from "./src/constants";
 import Routes from "./src/routes";
+import ReactQueryProvider from "./src/providers/ReactQueryProvider";
 LogBox.ignoreLogs;
 LogBox.ignoreAllLogs();
 SplashScreen.preventAutoHideAsync();
@@ -28,7 +29,9 @@ const App = () => {
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <StatusBar barStyle="dark-content" />
-      <Routes />
+      <ReactQueryProvider>
+        <Routes />
+      </ReactQueryProvider>
     </View>
   );
 };

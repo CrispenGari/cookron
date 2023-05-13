@@ -1,4 +1,6 @@
+import { ObjectId } from "https://deno.land/x/mongo@v0.31.2/mod.ts";
 export interface RecipeSchema {
+  _id: ObjectId;
   id: string;
   url: string;
   image: string;

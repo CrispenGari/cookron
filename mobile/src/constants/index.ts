@@ -2,6 +2,9 @@
 //   NEW_TO_APP: "NEW_TO_APP",
 //   APP_SETTINGS: "APP_SETTINGS",
 // };
+
+export const serverBaseURL: string =
+  "https://e8a0-102-66-198-128.ngrok-free.app";
 export const COLORS = {
   main: "#FEF7DC",
   primary: "#E6DDC6",
@@ -9,6 +12,7 @@ export const COLORS = {
   tertiary: "#A19882",
   white: "white",
   red: "#FF3953",
+  rating: "#FEC700",
 };
 export const Fonts = {
   AlmendraItalic: require("../../assets/fonts/Almendra-Italic.ttf"),
