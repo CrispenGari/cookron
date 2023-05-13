@@ -10,8 +10,9 @@ import { onImpact } from "../../utils";
 
 interface Props {
   recipe: RecipeType;
+  index: number;
 }
-const Recipe: React.FunctionComponent<Props> = ({ recipe }) => {
+const Recipe: React.FunctionComponent<Props> = ({ recipe, index }) => {
   const {
     dimension: { width },
   } = useMediaQuery();

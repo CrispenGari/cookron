@@ -9,8 +9,14 @@ import React from "react";
 import { RecipeType } from "../../types";
 import { styles } from "../../styles";
 import Recipe from "../Recipe/Recipe";
+import RippleLoadingIndicator from "../RippleLoadingIndicator/RippleLoadingIndicator";
+import { COLORS } from "../../constants";
+
 interface Props {
   recipes: RecipeType[];
+
+  isLoading: boolean;
+  fetchNextPageData: () => void;
   onMomentumScrollBegin: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
   onMomentumScrollEnd: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }
@@ -18,6 +24,8 @@ const Recipes: React.FunctionComponent<Props> = ({
   recipes,
   onMomentumScrollBegin,
   onMomentumScrollEnd,
+  isLoading,
+  fetchNextPageData,
 }) => {
   return (
     <View style={{ flex: 1 }}>
@@ -45,10 +53,32 @@ const Recipes: React.FunctionComponent<Props> = ({
         style={{ flex: 1 }}
         onMomentumScrollBegin={onMomentumScrollBegin}
         onMomentumScrollEnd={onMomentumScrollEnd}
+        onScroll={({ nativeEvent }) => {
+          const isAtEnd =
+            nativeEvent.contentOffset.y +
+              nativeEvent.layoutMeasurement.height ===
+            nativeEvent.contentSize.height;
+          if (isAtEnd) {
+            fetchNextPageData();
+          }
+        }}
       >
-        {recipes.map((recipe) => (
-          <Recipe recipe={recipe} key={recipe.id} />
+        {recipes.map((recipe, index) => (
+          <Recipe recipe={recipe} key={recipe.id} index={index} />
         ))}
+
+        <View
+          style={{
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            height: 100,
+          }}
+        >
+          {isLoading ? (
+            <RippleLoadingIndicator color={COLORS.secondary} size={20} />
+          ) : null}
+        </View>
       </ScrollView>
     </View>
   );

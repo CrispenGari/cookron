@@ -9,6 +9,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const messages: Array<string> = [
   "Hello welcome to Cookroon, learn how to cook using our app.",
+  "Explore more than 3,000 different recipes in our app.",
   "You can explore our available recipes from different Chefs within our app.",
   "You can expand your knowledge as a Chef by exploring all the dishes in this app and how other Chefs prepare different dishes to satisfy all.",
   "Most importantly you can favorite dishes, bookmark dishes for a massive database of dishes.",

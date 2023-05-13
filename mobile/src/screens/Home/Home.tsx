@@ -8,6 +8,7 @@ import {
   Animated,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Button,
 } from "react-native";
 import React from "react";
 import { COLORS, logo, serverBaseURL } from "../../constants";
@@ -15,31 +16,39 @@ import { AppNavProps } from "../../params";
 import Header from "../../components/Header/Header";
 import { Transition, Transitioning } from "react-native-reanimated";
 import TabNav from "../../components/TabNav/TabNav";
-import { useQuery } from "@tanstack/react-query";
-import { ResponseType } from "../../types";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { RecipeType, ResponseType } from "../../types";
 import Recipes from "../../components/Recipes/Recipes";
 import RecipeSkeleton from "../../components/skeletons/RecipeSkeleton/RecipeSkeleton";
 
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { styles } from "../../styles";
 import { onImpact } from "../../utils";
-
 const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
   const {
     dimension: { height, width },
   } = useMediaQuery();
-  const { data, error, isLoading } = useQuery({
+  const [hasNextPage, setHasNextPage] = React.useState<boolean>(false);
+  const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
+  const { isLoading, fetchNextPage, isFetching } = useInfiniteQuery({
     queryKey: ["recipes"],
-    queryFn: async (val) => {
+    queryFn: async ({ pageParam }) => {
       const res = await fetch(
-        `${serverBaseURL}/api/recipes/recipes?lastId=undefined`
+        `${serverBaseURL}/api/recipes/recipes?lastId=${pageParam}`
       );
       const data = await res.json();
       return data as ResponseType;
     },
+    staleTime: Infinity,
+    getNextPageParam: ({ lastId }) => lastId,
+    keepPreviousData: true,
+    onSuccess: (data) => {
+      setHasNextPage(data.pages.at(-1)?.hasNext || false);
+      setRecipes(data.pages.flatMap((page) => page.recipes));
+    },
   });
+
   const navRef = React.useRef<any>();
-  const buttonRef = React.useRef<any>();
   const zIndex = React.useRef(new Animated.Value(1)).current;
   const opacity = React.useRef(new Animated.Value(1)).current;
   const [state, setState] = React.useState({
@@ -174,11 +183,17 @@ const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
                 ))}
             </ScrollView>
           </View>
-        ) : data?.recipes ? (
+        ) : recipes.length ? (
           <Recipes
             onMomentumScrollEnd={onMomentumScrollEnd}
-            recipes={data.recipes}
+            recipes={recipes}
             onMomentumScrollBegin={onMomentumScrollBegin}
+            fetchNextPageData={async () => {
+              if (!isLoading && !isFetching && hasNextPage) {
+                await fetchNextPage();
+              }
+            }}
+            isLoading={isFetching || isLoading}
           />
         ) : (
           <Text>No Recipes.</Text>
