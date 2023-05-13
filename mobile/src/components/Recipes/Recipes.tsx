@@ -55,9 +55,9 @@ const Recipes: React.FunctionComponent<Props> = ({
         onMomentumScrollEnd={onMomentumScrollEnd}
         onScroll={({ nativeEvent }) => {
           const isAtEnd =
-            nativeEvent.contentOffset.y +
-              nativeEvent.layoutMeasurement.height ===
-            nativeEvent.contentSize.height;
+            (
+              nativeEvent.contentOffset.y + nativeEvent.layoutMeasurement.height
+            ).toFixed(0) === nativeEvent.contentSize.height.toFixed(0);
           if (isAtEnd) {
             fetchNextPageData();
           }
