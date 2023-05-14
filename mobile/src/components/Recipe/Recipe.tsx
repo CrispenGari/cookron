@@ -13,7 +13,7 @@ import { AppParamList } from "../../params";
 interface Props {
   recipe: RecipeType;
   index: number;
-  navigation: StackNavigationProp<AppParamList, "Home">;
+  navigation: StackNavigationProp<AppParamList, "Home" | "Favorites">;
   toggle?: () => void;
 }
 const Recipe: React.FunctionComponent<Props> = ({

@@ -1,3 +1,8 @@
+export type SettingsType = {
+  haptics: boolean;
+  limit: number;
+};
+
 export type RecipeType = {
   _id: string;
   id: string;

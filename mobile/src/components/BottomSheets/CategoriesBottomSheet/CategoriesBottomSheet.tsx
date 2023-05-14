@@ -12,7 +12,7 @@ import { COLORS } from "../../../constants";
 import { Transition, Transitioning } from "react-native-reanimated";
 import { CategoriesTabs } from "./CategoriesTabs";
 import { CategoriesHeader } from "./CategoriesHeader";
-import { MainCategoryType, RecipeType } from "../../../types";
+import { MainCategoryType } from "../../../types";
 import { onImpact } from "../../../utils";
 import { Animated } from "react-native";
 import { StyleSheet } from "react-native";

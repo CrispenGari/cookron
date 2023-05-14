@@ -1,7 +1,8 @@
-// export const KEYS = {
-//   NEW_TO_APP: "NEW_TO_APP",
-//   APP_SETTINGS: "APP_SETTINGS",
-// };
+export const KEYS = {
+  NEW_TO_APP: "NEW_TO_APP",
+  APP_SETTINGS: "APP_SETTINGS",
+  BOOK_MARKS: "BOOK_MARKS",
+};
 
 export const serverBaseURL = "https://b910-102-66-87-115.ngrok-free.app";
 export const COLORS = {

@@ -24,6 +24,7 @@ import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { styles } from "../../styles";
 import { onImpact } from "../../utils";
 import { CategoriesBottomSheet } from "../../components/BottomSheets";
+import Favorites from "../../components/Favorites/Favorites";
 const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
   const {
     dimension: { height, width },
@@ -156,58 +157,68 @@ const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
       <Transitioning.View transition={navTransition} ref={navRef}>
         <TabNav state={state} selectTab={selectTab} setState={setState} />
       </Transitioning.View>
-      <View style={{ flex: 1 }}>
-        {isLoading ? (
-          <View style={{ flex: 1 }}>
-            <Text
-              style={[
-                styles.p,
-                {
-                  fontSize: 20,
-                  marginLeft: 10,
-                },
-              ]}
-            >
-              RECIPES
-            </Text>
-            <ScrollView
-              scrollEventThrottle={16}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-                flexWrap: "wrap",
-                paddingBottom: 100,
-                paddingTop: 10,
-              }}
-              style={{ flex: 1 }}
-              onMomentumScrollBegin={onMomentumScrollBegin}
-              onMomentumScrollEnd={onMomentumScrollEnd}
-            >
-              {Array(15)
-                .fill(null)
-                .map((_, index) => (
-                  <RecipeSkeleton key={index} />
-                ))}
-            </ScrollView>
-          </View>
-        ) : recipes.length ? (
-          <Recipes
-            onMomentumScrollEnd={onMomentumScrollEnd}
-            recipes={recipes}
-            onMomentumScrollBegin={onMomentumScrollBegin}
-            fetchNextPageData={async () => {
-              if (!isLoading && !isFetching && hasNextPage) {
-                await fetchNextPage();
-              }
-            }}
-            isLoading={isFetching || isLoading}
+      {state.selectedTab === 1 ? (
+        <View style={{ flex: 1 }}>
+          <Favorites
             navigation={navigation}
+            onMomentumScrollEnd={onMomentumScrollEnd}
+            onMomentumScrollBegin={onMomentumScrollBegin}
           />
-        ) : (
-          <Text>No Recipes.</Text>
-        )}
-      </View>
+        </View>
+      ) : (
+        <View style={{ flex: 1 }}>
+          {isLoading ? (
+            <View style={{ flex: 1 }}>
+              <Text
+                style={[
+                  styles.p,
+                  {
+                    fontSize: 20,
+                    marginLeft: 10,
+                  },
+                ]}
+              >
+                RECIPES
+              </Text>
+              <ScrollView
+                scrollEventThrottle={16}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                  flexWrap: "wrap",
+                  paddingBottom: 100,
+                  paddingTop: 10,
+                }}
+                style={{ flex: 1 }}
+                onMomentumScrollBegin={onMomentumScrollBegin}
+                onMomentumScrollEnd={onMomentumScrollEnd}
+              >
+                {Array(15)
+                  .fill(null)
+                  .map((_, index) => (
+                    <RecipeSkeleton key={index} />
+                  ))}
+              </ScrollView>
+            </View>
+          ) : recipes.length ? (
+            <Recipes
+              onMomentumScrollEnd={onMomentumScrollEnd}
+              recipes={recipes}
+              onMomentumScrollBegin={onMomentumScrollBegin}
+              fetchNextPageData={async () => {
+                if (!isLoading && !isFetching && hasNextPage) {
+                  await fetchNextPage();
+                }
+              }}
+              isLoading={isFetching || isLoading}
+              navigation={navigation}
+            />
+          ) : (
+            <Text>No Recipes.</Text>
+          )}
+        </View>
+      )}
     </View>
   );
 };

@@ -1,23 +1,30 @@
-import { View, Text, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from "react-native";
 import React from "react";
-import { AppNavProps } from "../../params";
-import { COLORS, KEYS } from "../../constants";
 import { RecipeType } from "../../types";
+import { styles } from "../../styles";
+import Recipe from "../Recipe/Recipe";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { AppParamList } from "../../params";
+import { KEYS } from "../../constants";
 import { retrieve } from "../../utils";
-import Recipe from "../../components/Recipe/Recipe";
-import FavoritesHeader from "../../components/Headers/FavoritesHeader";
 
-const Favorites: React.FunctionComponent<AppNavProps<"Favorites">> = ({
+interface Props {
+  navigation: StackNavigationProp<AppParamList, "Home">;
+  onMomentumScrollBegin: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  onMomentumScrollEnd: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
+}
+const Favorites: React.FunctionComponent<Props> = ({
+  onMomentumScrollBegin,
+  onMomentumScrollEnd,
   navigation,
 }) => {
   const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      header: (props) => <FavoritesHeader {...props} />,
-    });
-  }, [navigation]);
-
   React.useEffect(() => {
     (async () => {
       const res = await retrieve(KEYS.BOOK_MARKS);
@@ -26,7 +33,18 @@ const Favorites: React.FunctionComponent<AppNavProps<"Favorites">> = ({
     })();
   }, []);
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.main }}>
+    <View style={{ flex: 1 }}>
+      <Text
+        style={[
+          styles.p,
+          {
+            fontSize: 20,
+            marginLeft: 10,
+          },
+        ]}
+      >
+        FAVORITES
+      </Text>
       <ScrollView
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={16}
@@ -38,6 +56,8 @@ const Favorites: React.FunctionComponent<AppNavProps<"Favorites">> = ({
           paddingTop: 10,
         }}
         style={{ flex: 1 }}
+        onMomentumScrollBegin={onMomentumScrollBegin}
+        onMomentumScrollEnd={onMomentumScrollEnd}
       >
         {recipes.map((recipe, index) => (
           <Recipe
