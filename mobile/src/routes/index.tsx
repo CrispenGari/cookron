@@ -8,7 +8,7 @@ const Routes = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Landing"
+        initialRouteName="Home"
         screenOptions={{
           headerStyle: {
             shadowOpacity: 0,

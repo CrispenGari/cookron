@@ -24,6 +24,7 @@ import RecipeSkeleton from "../../components/skeletons/RecipeSkeleton/RecipeSkel
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { styles } from "../../styles";
 import { onImpact } from "../../utils";
+import { CategoriesBottomSheet } from "../../components/BottomSheets";
 const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
   const {
     dimension: { height, width },
@@ -114,6 +115,8 @@ const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
     </Transition.Together>
   );
 
+  const [openCategories, setOpenCategories] = React.useState<boolean>(false);
+  const toggleOpenCategories = () => setOpenCategories((state) => !state);
   return (
     <View
       style={{
@@ -122,6 +125,10 @@ const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
         position: "relative",
       }}
     >
+      <CategoriesBottomSheet
+        open={openCategories}
+        toggle={toggleOpenCategories}
+      />
       <Animated.View
         style={{
           zIndex,
@@ -132,6 +139,7 @@ const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => {
             onImpact();
+            toggleOpenCategories();
           }}
           style={[
             style.button,

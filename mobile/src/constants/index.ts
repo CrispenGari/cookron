@@ -3,8 +3,8 @@
 //   APP_SETTINGS: "APP_SETTINGS",
 // };
 
-export const serverBaseURL: string =
-  "https://3221-213-172-135-101.ngrok-free.app";
+export const serverBaseURL =
+  "https://b910-102-66-87-115.ngrok-free.app";
 export const COLORS = {
   main: "#FEF7DC",
   primary: "#E6DDC6",
