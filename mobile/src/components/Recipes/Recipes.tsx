@@ -11,10 +11,13 @@ import { styles } from "../../styles";
 import Recipe from "../Recipe/Recipe";
 import RippleLoadingIndicator from "../RippleLoadingIndicator/RippleLoadingIndicator";
 import { COLORS } from "../../constants";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { AppParamList } from "../../params";
 
 interface Props {
   recipes: RecipeType[];
   isLoading: boolean;
+  navigation: StackNavigationProp<AppParamList, "Home">;
   fetchNextPageData: () => void;
   onMomentumScrollBegin: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
   onMomentumScrollEnd: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
@@ -25,6 +28,7 @@ const Recipes: React.FunctionComponent<Props> = ({
   onMomentumScrollEnd,
   isLoading,
   fetchNextPageData,
+  navigation,
 }) => {
   return (
     <View style={{ flex: 1 }}>
@@ -63,7 +67,12 @@ const Recipes: React.FunctionComponent<Props> = ({
         }}
       >
         {recipes.map((recipe, index) => (
-          <Recipe recipe={recipe} key={recipe.id} index={index} />
+          <Recipe
+            recipe={recipe}
+            key={recipe.id}
+            index={index}
+            navigation={navigation}
+          />
         ))}
 
         <View

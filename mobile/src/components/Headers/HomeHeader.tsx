@@ -1,5 +1,4 @@
 import {
-  View,
   Text,
   SafeAreaView,
   TextInput,
@@ -12,7 +11,7 @@ import * as Animatable from "react-native-animatable";
 import { Ionicons } from "@expo/vector-icons";
 import { styles } from "../../styles";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
-const Header = () => {
+const HomeHeader = () => {
   const [focused, setFocused] = React.useState<boolean>(false);
   const {
     dimension: { width },
@@ -95,4 +94,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default HomeHeader;

@@ -1,20 +1,14 @@
 import {
   View,
-  Text,
-  FlatList,
   SafeAreaView,
   TouchableOpacity,
-  Image,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ScrollView,
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from "react-native";
 import React from "react";
 import { BottomSheet } from "react-native-btr";
 import { useMediaQuery } from "../../../hooks/useMediaQuery";
-import { COLORS, serverBaseURL } from "../../../constants";
+import { COLORS } from "../../../constants";
 import { Transition, Transitioning } from "react-native-reanimated";
 import { CategoriesTabs } from "./CategoriesTabs";
 import { CategoriesHeader } from "./CategoriesHeader";
@@ -23,15 +17,10 @@ import { onImpact } from "../../../utils";
 import { Animated } from "react-native";
 import { StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { ResponseType } from "../../../types";
-import Recipe from "../../Recipe/Recipe";
-import ContentLoader from "../../ContentLoader/ContentLoader";
-import RecipeSkeleton from "../../skeletons/RecipeSkeleton/RecipeSkeleton";
-import RippleLoadingIndicator from "../../RippleLoadingIndicator/RippleLoadingIndicator";
 import { CategoriesTopHeader } from "./CategoriesTopHeader";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AppParamList } from "../../../params";
+import { CategoryRecipes } from "./CategoryRecipes";
 interface Props {
   toggle: () => void;
   open: boolean;
@@ -124,6 +113,7 @@ const CreateEngineBottomSheet: React.FunctionComponent<Props> = ({
             onMomentumScrollEnd={onMomentumScrollEnd}
             onMomentumScrollBegin={onMomentumScrollBegin}
             category={tab}
+            toggle={toggle}
           />
           <Animated.View
             style={{
@@ -156,97 +146,6 @@ const CreateEngineBottomSheet: React.FunctionComponent<Props> = ({
 };
 
 export default CreateEngineBottomSheet;
-
-const CategoryRecipes: React.FunctionComponent<{
-  category: MainCategoryType;
-  navigation: StackNavigationProp<AppParamList, "Home">;
-  onMomentumScrollBegin: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
-  onMomentumScrollEnd: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
-}> = ({ category, onMomentumScrollBegin, onMomentumScrollEnd }) => {
-  const [hasNextPage, setHasNextPage] = React.useState<boolean>(false);
-  const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
-  const client = useQueryClient();
-  const { isLoading, fetchNextPage, isFetching } = useInfiniteQuery({
-    queryKey: ["recipes", category],
-    queryFn: async ({ pageParam, queryKey }) => {
-      const [_, cate] = queryKey;
-      const res = await fetch(
-        `${serverBaseURL}/api/recipes/${cate}?lastId=${pageParam}`
-      );
-      const data = await res.json();
-      return data as ResponseType;
-    },
-    staleTime: Infinity,
-    getNextPageParam: ({ lastId }) => lastId,
-    keepPreviousData: true,
-    onSuccess: (data) => {
-      setHasNextPage(data.pages.at(-1)?.hasNext || false);
-      setRecipes(data.pages.flatMap((page) => page.recipes));
-    },
-  });
-
-  React.useEffect(() => {
-    let mounted: boolean = true;
-    if (mounted && !!category) {
-      (async () => {
-        setRecipes([]);
-        await client.invalidateQueries(["recipes", category], { exact: true });
-      })();
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [category]);
-  return (
-    <ScrollView
-      contentContainerStyle={{
-        padding: 10,
-        flexWrap: "wrap",
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-      }}
-      style={{ flex: 1 }}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      scrollEventThrottle={16}
-      onMomentumScrollBegin={onMomentumScrollBegin}
-      onMomentumScrollEnd={onMomentumScrollEnd}
-      onScroll={async ({ nativeEvent }) => {
-        const isAtEnd =
-          (
-            nativeEvent.contentOffset.y + nativeEvent.layoutMeasurement.height
-          ).toFixed(0) === nativeEvent.contentSize.height.toFixed(0);
-        if (isAtEnd && hasNextPage) {
-          await fetchNextPage();
-        }
-      }}
-    >
-      {isLoading ? (
-        Array(21)
-          .fill(null)
-          .map((_, index) => <RecipeSkeleton key={index} />)
-      ) : recipes.length === 0 && !isFetching && !isLoading ? (
-        <Text>No recipes</Text>
-      ) : (
-        recipes.map((recipe) => (
-          <Recipe recipe={recipe} index={0} key={recipe.id} />
-        ))
-      )}
-      <View
-        style={{
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-          height: 100,
-        }}
-      >
-        {isFetching ? (
-          <RippleLoadingIndicator color={COLORS.secondary} size={20} />
-        ) : null}
-      </View>
-    </ScrollView>
-  );
-};
 
 const style = StyleSheet.create({
   button: {

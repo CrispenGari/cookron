@@ -7,12 +7,21 @@ import Ratting from "../Ratting/Ratting";
 import { onImpact } from "../../utils";
 import { COLORS } from "../../constants";
 import ContentLoader from "../ContentLoader/ContentLoader";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { AppParamList } from "../../params";
 
 interface Props {
   recipe: RecipeType;
   index: number;
+  navigation: StackNavigationProp<AppParamList, "Home">;
+  toggle?: () => void;
 }
-const Recipe: React.FunctionComponent<Props> = ({ recipe, index }) => {
+const Recipe: React.FunctionComponent<Props> = ({
+  recipe,
+  index,
+  navigation,
+  toggle,
+}) => {
   const {
     dimension: { width },
   } = useMediaQuery();
@@ -22,6 +31,12 @@ const Recipe: React.FunctionComponent<Props> = ({ recipe, index }) => {
       activeOpacity={0.7}
       onPress={() => {
         onImpact();
+        if (typeof toggle !== "undefined") {
+          toggle();
+        }
+        navigation.navigate("Recipe", {
+          recipe: JSON.stringify(recipe),
+        });
       }}
       style={{
         margin: 5,

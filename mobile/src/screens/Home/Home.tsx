@@ -8,12 +8,11 @@ import {
   Animated,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  Button,
 } from "react-native";
 import React from "react";
 import { COLORS, logo, serverBaseURL } from "../../constants";
 import { AppNavProps } from "../../params";
-import Header from "../../components/Header/Header";
+import HomeHeader from "../../components/Headers/HomeHeader";
 import { Transition, Transitioning } from "react-native-reanimated";
 import TabNav from "../../components/TabNav/TabNav";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -64,7 +63,7 @@ const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
   };
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      header: ({}) => <Header />,
+      header: ({}) => <HomeHeader />,
     });
   }, [navigation]);
   React.useLayoutEffect(() => {
@@ -203,6 +202,7 @@ const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
               }
             }}
             isLoading={isFetching || isLoading}
+            navigation={navigation}
           />
         ) : (
           <Text>No Recipes.</Text>
