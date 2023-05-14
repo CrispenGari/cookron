@@ -128,6 +128,7 @@ const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
       <CategoriesBottomSheet
         open={openCategories}
         toggle={toggleOpenCategories}
+        navigation={navigation}
       />
       <Animated.View
         style={{

@@ -5,6 +5,10 @@ export type AppParamList = {
   Landing: undefined;
   Home: undefined;
   Settings: undefined;
+  Favorites: undefined;
+  Recipe: {
+    recipe: string;
+  };
 };
 
 export type AppNavProps<T extends keyof AppParamList> = {

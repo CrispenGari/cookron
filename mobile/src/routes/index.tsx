@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { AppParamList } from "../params";
-import { Landing, Home, Settings } from "../screens";
+import { Landing, Home, Settings, Favorites, Recipe } from "../screens";
 import { COLORS, FONTS } from "../constants";
 const Stack = createStackNavigator<AppParamList>();
 const Routes = () => {
@@ -24,6 +24,8 @@ const Routes = () => {
         }}
       >
         <Stack.Screen name="Landing" component={Landing} />
+        <Stack.Screen name="Favorites" component={Favorites} />
+        <Stack.Screen name="Recipe" component={Recipe} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Settings" component={Settings} />
       </Stack.Navigator>

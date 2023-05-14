@@ -29,13 +29,18 @@ import Recipe from "../../Recipe/Recipe";
 import ContentLoader from "../../ContentLoader/ContentLoader";
 import RecipeSkeleton from "../../skeletons/RecipeSkeleton/RecipeSkeleton";
 import RippleLoadingIndicator from "../../RippleLoadingIndicator/RippleLoadingIndicator";
+import { CategoriesTopHeader } from "./CategoriesTopHeader";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { AppParamList } from "../../../params";
 interface Props {
   toggle: () => void;
   open: boolean;
+  navigation: StackNavigationProp<AppParamList, "Home">;
 }
 const CreateEngineBottomSheet: React.FunctionComponent<Props> = ({
   toggle,
   open,
+  navigation,
 }) => {
   const navRef = React.useRef<any>();
   const zIndex = React.useRef(new Animated.Value(1)).current;
@@ -95,48 +100,57 @@ const CreateEngineBottomSheet: React.FunctionComponent<Props> = ({
       onBackButtonPress={toggle}
       onBackdropPress={toggle}
     >
-      <SafeAreaView
+      <View
         style={{
-          backgroundColor: COLORS.main,
-          height: height - 100,
-          borderTopRightRadius: 30,
-          borderTopLeftRadius: 30,
+          height,
         }}
       >
-        <CategoriesHeader tab={tab} />
-        <Transitioning.View transition={navTransition} ref={navRef}>
-          <CategoriesTabs tab={tab} setTab={setTab} />
-        </Transitioning.View>
-        <CategoryRecipes
-          onMomentumScrollEnd={onMomentumScrollEnd}
-          onMomentumScrollBegin={onMomentumScrollBegin}
-          category={tab}
-        />
-        <Animated.View
+        <CategoriesTopHeader navigation={navigation} toggle={toggle} />
+        <SafeAreaView
           style={{
-            position: "absolute",
-            opacity,
-            zIndex,
+            flex: 1,
+            height: height - 100,
+            backgroundColor: COLORS.main,
+            borderTopRightRadius: 30,
+            borderTopLeftRadius: 30,
           }}
         >
-          <TouchableOpacity
-            onPress={() => {
-              onImpact();
-              toggle();
+          <CategoriesHeader tab={tab} />
+          <Transitioning.View transition={navTransition} ref={navRef}>
+            <CategoriesTabs tab={tab} setTab={setTab} />
+          </Transitioning.View>
+          <CategoryRecipes
+            navigation={navigation}
+            onMomentumScrollEnd={onMomentumScrollEnd}
+            onMomentumScrollBegin={onMomentumScrollBegin}
+            category={tab}
+          />
+          <Animated.View
+            style={{
+              position: "absolute",
+              opacity,
+              zIndex,
             }}
-            style={[
-              style.button,
-              {
-                top: height * 0.77,
-                left: width / 2 - 25,
-              },
-            ]}
-            activeOpacity={0.7}
           >
-            <Ionicons name="ios-close" size={24} color={COLORS.tertiary} />
-          </TouchableOpacity>
-        </Animated.View>
-      </SafeAreaView>
+            <TouchableOpacity
+              onPress={() => {
+                onImpact();
+                toggle();
+              }}
+              style={[
+                style.button,
+                {
+                  top: height * 0.77,
+                  left: width / 2 - 25,
+                },
+              ]}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="ios-close" size={24} color={COLORS.tertiary} />
+            </TouchableOpacity>
+          </Animated.View>
+        </SafeAreaView>
+      </View>
     </BottomSheet>
   );
 };
@@ -145,6 +159,7 @@ export default CreateEngineBottomSheet;
 
 const CategoryRecipes: React.FunctionComponent<{
   category: MainCategoryType;
+  navigation: StackNavigationProp<AppParamList, "Home">;
   onMomentumScrollBegin: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
   onMomentumScrollEnd: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }> = ({ category, onMomentumScrollBegin, onMomentumScrollEnd }) => {
