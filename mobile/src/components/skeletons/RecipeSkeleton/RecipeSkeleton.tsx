@@ -1,9 +1,8 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import React from "react";
-import Animation from "../Animation/Animation";
-import Skeleton from "../Skeleton/Skeleton";
 import { useMediaQuery } from "../../../hooks/useMediaQuery";
 import { COLORS } from "../../../constants";
+import ContentLoader from "../../ContentLoader/ContentLoader";
 const RecipeSkeleton = () => {
   const {
     dimension: { width },
@@ -18,13 +17,59 @@ const RecipeSkeleton = () => {
         overflow: "hidden",
       }}
     >
-      <Skeleton type="h1" />
-      <Skeleton type="h2" />
-      <Skeleton type="p" />
-      <Skeleton type="image" />
-      <Skeleton type="ratings" />
-      <Skeleton type="p" />
-      <Animation />
+      <ContentLoader
+        style={{
+          width: "100%",
+          height: 10,
+          borderRadius: 5,
+          backgroundColor: COLORS.secondary,
+          marginBottom: 2,
+        }}
+      />
+      <ContentLoader
+        style={{
+          width: "70%",
+          height: 10,
+          borderRadius: 5,
+          backgroundColor: COLORS.secondary,
+          marginBottom: 2,
+        }}
+      />
+      <ContentLoader
+        style={{
+          width: "100%",
+          height: 6,
+          borderRadius: 5,
+          backgroundColor: COLORS.secondary,
+          marginBottom: 2,
+        }}
+      />
+      <ContentLoader
+        style={{
+          height: 100,
+          borderRadius: 5,
+          backgroundColor: COLORS.secondary,
+          marginBottom: 2,
+        }}
+      />
+      <ContentLoader
+        style={{
+          height: 10,
+          borderRadius: 999,
+          width: "40%",
+          marginBottom: 2,
+          backgroundColor: COLORS.secondary,
+        }}
+      />
+      <ContentLoader
+        style={{
+          width: "100%",
+          height: 6,
+          borderRadius: 5,
+          backgroundColor: COLORS.secondary,
+          marginBottom: 2,
+        }}
+      />
     </View>
   );
 };

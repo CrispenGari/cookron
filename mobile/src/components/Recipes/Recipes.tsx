@@ -14,7 +14,6 @@ import { COLORS } from "../../constants";
 
 interface Props {
   recipes: RecipeType[];
-
   isLoading: boolean;
   fetchNextPageData: () => void;
   onMomentumScrollBegin: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;

@@ -4,9 +4,9 @@ import type { RecipeType } from "../../types";
 import { styles } from "../../styles";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import Ratting from "../Ratting/Ratting";
-import Skeleton from "../skeletons/Skeleton/Skeleton";
-import Animations from "../skeletons/Animation/Animation";
 import { onImpact } from "../../utils";
+import { COLORS } from "../../constants";
+import ContentLoader from "../ContentLoader/ContentLoader";
 
 interface Props {
   recipe: RecipeType;
@@ -34,10 +34,15 @@ const Recipe: React.FunctionComponent<Props> = ({ recipe, index }) => {
       <Text style={[styles.p, { fontSize: 14, color: "gray" }]}>
         {recipe.author} • {recipe.dish_type} • {recipe.difficult}
       </Text>
-      <View style={{ overflow: "hidden", display: !loaded ? "flex" : "none" }}>
-        <Skeleton type="image" />
-        <Animations />
-      </View>
+      <ContentLoader
+        style={{
+          height: 100,
+          borderRadius: 5,
+          backgroundColor: COLORS.secondary,
+          marginBottom: 2,
+          display: !loaded ? "flex" : "none",
+        }}
+      />
       <Image
         source={{
           uri: recipe.image,
