@@ -11,8 +11,19 @@ import * as Animatable from "react-native-animatable";
 import { Ionicons } from "@expo/vector-icons";
 import { styles } from "../../styles";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
-const HomeHeader = () => {
+
+interface Props {
+  term: string;
+  setTerm: React.Dispatch<React.SetStateAction<string>>;
+  setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const HomeHeader: React.FunctionComponent<Props> = ({
+  term,
+  setTerm,
+  setOpenSearch,
+}) => {
   const [focused, setFocused] = React.useState<boolean>(false);
+
   const {
     dimension: { width },
   } = useMediaQuery();
@@ -50,9 +61,9 @@ const HomeHeader = () => {
           alignItems: "center",
           marginHorizontal: 10,
           borderRadius: 5,
-          maxWidth: 500,
           paddingHorizontal: 10,
           flex: width > 600 ? 1 : 0,
+          maxWidth: 500,
         }}
       >
         <Animatable.View
@@ -62,6 +73,8 @@ const HomeHeader = () => {
           <TouchableOpacity
             onPress={() => {
               if (focused) {
+                setTerm("");
+                setOpenSearch(false);
                 Keyboard.dismiss();
               }
             }}
@@ -80,14 +93,21 @@ const HomeHeader = () => {
         </Animatable.View>
         <TextInput
           placeholder="Search Recipes, Dishes, Food, etc."
+          value={term}
+          onChangeText={(text) => setTerm(text)}
           style={{
             fontSize: width > 600 ? 24 : 20,
             marginLeft: 15,
             flex: 1,
             fontFamily: FONTS.regular,
           }}
-          onBlur={() => setFocused((state) => !state)}
-          onFocus={() => setFocused((state) => !state)}
+          onBlur={() => {
+            setFocused(false);
+          }}
+          onFocus={() => {
+            setFocused(true);
+            setOpenSearch(true);
+          }}
         />
       </Animatable.View>
     </SafeAreaView>

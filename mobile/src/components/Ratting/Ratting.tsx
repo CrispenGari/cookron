@@ -6,7 +6,28 @@ import { COLORS } from "../../constants";
 const Ratting: React.FunctionComponent<{
   value: number;
   max: number;
-}> = ({ value, max = 5 }) => {
+  size?: "small" | "normal";
+}> = ({ value, max = 5, size = "normal" }) => {
+  if (size === "small") {
+    return (
+      <View style={{ flexDirection: "row", marginVertical: 3 }}>
+        {Array(max)
+          .fill(value)
+          .map((v, i) => {
+            return (
+              <View key={i}>
+                {v < i + 1 ? (
+                  <AntDesign name="staro" size={10} color={COLORS.rating} />
+                ) : (
+                  <AntDesign name="star" size={10} color={COLORS.rating} />
+                )}
+              </View>
+            );
+          })}
+      </View>
+    );
+  }
+
   return (
     <View style={{ flexDirection: "row", marginVertical: 5 }}>
       {Array(max)

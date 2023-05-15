@@ -9,6 +9,7 @@ import { MainCategoryType, RecipeType, ResponseType } from "../../../types";
 import Recipe from "../../Recipe/Recipe";
 import RippleLoadingIndicator from "../../RippleLoadingIndicator/RippleLoadingIndicator";
 import RecipeSkeleton from "../../skeletons/RecipeSkeleton/RecipeSkeleton";
+import { styles } from "../../../styles";
 
 export const CategoryRecipes: React.FunctionComponent<{
   category: MainCategoryType;
@@ -86,7 +87,9 @@ export const CategoryRecipes: React.FunctionComponent<{
           .fill(null)
           .map((_, index) => <RecipeSkeleton key={index} />)
       ) : recipes.length === 0 && !isFetching && !isLoading ? (
-        <Text>No recipes</Text>
+        <Text style={[styles.p, { padding: 20, textAlign: "center" }]}>
+          No Recipes.
+        </Text>
       ) : (
         recipes.map((recipe) => (
           <Recipe

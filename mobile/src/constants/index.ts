@@ -4,7 +4,7 @@ export const KEYS = {
   BOOK_MARKS: "BOOK_MARKS",
 };
 
-export const serverBaseURL = "https://b910-102-66-87-115.ngrok-free.app";
+export const serverBaseURL = "https://8e6d-102-66-137-72.ngrok-free.app";
 export const COLORS = {
   main: "#FEF7DC",
   primary: "#E6DDC6",

@@ -1,3 +1,11 @@
+import * as Network from "expo-network";
+
+export type NetworkType = {
+  type: Network.NetworkStateType | undefined;
+  isConnected: boolean | undefined;
+  isInternetReachable: boolean | undefined;
+};
+
 export type SettingsType = {
   haptics: boolean;
   limit: number;
