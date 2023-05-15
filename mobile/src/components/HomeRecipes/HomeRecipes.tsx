@@ -182,7 +182,7 @@ const HomeRecipes: React.FunctionComponent<{
         </View>
       ) : (
         <View style={{ flex: 1 }}>
-          {isLoading ? (
+          {isFetching && recipes.length === 0 ? (
             <View style={{ flex: 1 }}>
               <Text
                 style={[

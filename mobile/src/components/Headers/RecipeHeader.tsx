@@ -5,8 +5,9 @@ import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { StackHeaderProps } from "@react-navigation/stack";
 import { RecipeType } from "../../types";
 import { styles } from "../../styles";
-import { Ionicons, Feather } from "@expo/vector-icons";
-import { onImpact, playMusic } from "../../utils";
+import { Ionicons, Feather, MaterialIcons } from "@expo/vector-icons";
+import { onImpact, playMusic, stopMusic } from "../../utils";
+import { useMusicStore } from "../../store";
 const RecipeHeader: React.FunctionComponent<
   StackHeaderProps & {
     recipe: RecipeType;
@@ -15,6 +16,7 @@ const RecipeHeader: React.FunctionComponent<
   const {
     dimension: { width },
   } = useMediaQuery();
+  const { music, setMusic } = useMusicStore();
   return (
     <SafeAreaView
       style={{
@@ -49,11 +51,21 @@ const RecipeHeader: React.FunctionComponent<
           activeOpacity={0.7}
           onPress={async () => {
             onImpact();
-            await playMusic();
+            if (music) {
+              setMusic(false);
+              await stopMusic();
+            } else {
+              setMusic(true);
+              await playMusic();
+            }
           }}
           style={{ paddingHorizontal: 10 }}
         >
-          <Feather name="music" size={24} color={COLORS.main} />
+          {!music ? (
+            <Feather name="music" size={24} color={COLORS.main} />
+          ) : (
+            <MaterialIcons name="music-off" size={24} color={COLORS.main} />
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

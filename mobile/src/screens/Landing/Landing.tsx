@@ -1,11 +1,14 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { COLORS, logo } from "../../constants";
+import { COLORS, FONTS, KEYS, logo } from "../../constants";
 import { AppNavProps } from "../../params";
 import { styles } from "../../styles";
 import * as Animatable from "react-native-animatable";
 import TypeWriter from "react-native-typewriter";
 import { LinearGradient } from "expo-linear-gradient";
+import { del, retrieve, store } from "../../utils";
+import Loading from "../../components/Loading/Loading";
+import { SettingsType } from "../../types";
 
 const messages: Array<string> = [
   "Hello welcome to Cookroon, learn how to cook using our app.",
@@ -19,7 +22,8 @@ const Landing: React.FunctionComponent<AppNavProps<"Landing">> = ({
 }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
-  }, []);
+  }, [navigation]);
+  const [loading, setLoading] = React.useState(false);
   const [index, setIndex] = React.useState(0);
   React.useEffect(() => {
     const intervalId = setInterval(() => {
@@ -34,6 +38,23 @@ const Landing: React.FunctionComponent<AppNavProps<"Landing">> = ({
     };
   }, [index]);
 
+  React.useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const res = await retrieve(KEYS.NEW_TO_APP);
+      if (!!res) {
+        const _payload = JSON.parse(res as string) as {
+          new: boolean;
+        };
+        if (_payload.new === false) {
+          navigation.replace("Home");
+        }
+      }
+      setLoading(false);
+    })();
+  }, [navigation]);
+
+  if (loading) return <Loading />;
   return (
     <View
       style={{
@@ -135,6 +156,15 @@ const Landing: React.FunctionComponent<AppNavProps<"Landing">> = ({
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={async () => {
+              const data: {
+                new: boolean;
+              } = { new: false };
+              await store(KEYS.NEW_TO_APP, JSON.stringify(data));
+              const settings: SettingsType = {
+                haptics: true,
+                limit: 21,
+              };
+              await store(KEYS.APP_SETTINGS, JSON.stringify(settings));
               navigation.replace("Home");
             }}
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}

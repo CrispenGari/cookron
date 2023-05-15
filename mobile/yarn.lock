@@ -5765,6 +5765,11 @@ react-native-gradle-plugin@^0.71.17:
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.18.tgz#20ef199bc85be32e45bb6cc069ec2e7dcb1a74a6"
   integrity sha512-7F6bD7B8Xsn3JllxcwHhFcsl9aHIig47+3eN4IHFNqfLhZr++3ElDrcqfMzugM+niWbaMi7bJ0kAkAL8eCpdWg==
 
+react-native-input-select@^0.30.0:
+  version "0.30.0"
+  resolved "https://registry.yarnpkg.com/react-native-input-select/-/react-native-input-select-0.30.0.tgz#ba41dba155fb950c2eaeb86b47ae2cdc0eee95ee"
+  integrity sha512-IToHVywbYmNTwjXAVUdFm5v86DTDdiOaYpeITGSfHOhT1XTxsz6s/fAMQ35UYb0SRzNo4vaONqvjpQYnvGrzaQ==
+
 react-native-modal@^13.0.1:
   version "13.0.1"
   resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-13.0.1.tgz#691f1e646abb96fa82c1788bf18a16d585da37cd"
