@@ -9,6 +9,7 @@ import { RecipeType, ResponseType } from "../../types";
 import { useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import RippleLoadingIndicator from "../RippleLoadingIndicator/RippleLoadingIndicator";
 import SearchResult from "../SearchResult/SearchResult";
+import { useNetworkStore, useSettingsStore } from "../../store";
 
 interface Props {
   navigation: StackNavigationProp<AppParamList, "Home">;
@@ -20,13 +21,18 @@ const HomeSearchResults: React.FunctionComponent<Props> = ({
 }) => {
   const [hasNextPage, setHasNextPage] = React.useState<boolean>(false);
   const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
+  const {
+    settings: { limit },
+  } = useSettingsStore();
+
+  const { network } = useNetworkStore();
   const client = useQueryClient();
   const { isLoading, fetchNextPage, isFetching } = useInfiniteQuery({
-    queryKey: ["recipes", searchTerm],
+    queryKey: ["recipes", searchTerm, limit],
     queryFn: async ({ pageParam, queryKey }) => {
-      const [_, term] = queryKey;
+      const [_, term, _limit] = queryKey;
       const res = await fetch(
-        `${serverBaseURL}/api/recipes/recipes/search?searchTerm=${term}&lastId=${pageParam}`
+        `${serverBaseURL}/api/recipes/recipes/search?searchTerm=${term}&lastId=${pageParam}&limit=${_limit}`
       );
       const data = await res.json();
       return data as ResponseType;
@@ -48,7 +54,7 @@ const HomeSearchResults: React.FunctionComponent<Props> = ({
           setRecipes([]);
         } else {
           setRecipes([]);
-          await client.invalidateQueries(["recipes", searchTerm], {
+          await client.invalidateQueries(["recipes", searchTerm, limit], {
             exact: true,
           });
         }
@@ -57,7 +63,37 @@ const HomeSearchResults: React.FunctionComponent<Props> = ({
     return () => {
       mounted = false;
     };
-  }, [searchTerm]);
+  }, [searchTerm, limit]);
+
+  if (network.isInternetReachable) {
+    return (
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        scrollEventThrottle={16}
+        contentContainerStyle={{
+          paddingBottom: 100,
+          paddingTop: 10,
+        }}
+        style={{ flex: 1, backgroundColor: COLORS.main }}
+      >
+        <TypeWriter
+          style={[
+            styles.p,
+            {
+              textAlign: "center",
+              padding: 20,
+              height: 100,
+            },
+          ]}
+          typing={1}
+          maxDelay={-50}
+        >
+          {`You don't have internet connection to search in the recipe database.`}
+        </TypeWriter>
+      </ScrollView>
+    );
+  }
 
   return (
     <ScrollView

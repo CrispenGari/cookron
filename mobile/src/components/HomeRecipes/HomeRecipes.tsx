@@ -24,6 +24,7 @@ import { AppParamList } from "../../params";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { RecipeType, ResponseType } from "../../types";
 import { useMediaQuery } from "../../hooks";
+import { useNetworkStore, useSettingsStore } from "../../store";
 
 const HomeRecipes: React.FunctionComponent<{
   navigation: StackNavigationProp<AppParamList, "Home">;
@@ -33,6 +34,10 @@ const HomeRecipes: React.FunctionComponent<{
     dimension: { height, width },
   } = useMediaQuery();
   const navRef = React.useRef<any>();
+  const {
+    settings: { limit },
+  } = useSettingsStore();
+  const { network } = useNetworkStore();
   const zIndex = React.useRef(new Animated.Value(1)).current;
   const opacity = React.useRef(new Animated.Value(1)).current;
   const [state, setState] = React.useState({
@@ -49,10 +54,11 @@ const HomeRecipes: React.FunctionComponent<{
   const [hasNextPage, setHasNextPage] = React.useState<boolean>(false);
   const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
   const { isLoading, fetchNextPage, isFetching } = useInfiniteQuery({
-    queryKey: ["recipes"],
-    queryFn: async ({ pageParam }) => {
+    queryKey: ["recipes", limit],
+    queryFn: async ({ pageParam, queryKey }) => {
+      const [_, _limit] = queryKey;
       const res = await fetch(
-        `${serverBaseURL}/api/recipes/recipes?lastId=${pageParam}`
+        `${serverBaseURL}/api/recipes/recipes?lastId=${pageParam}&limit=${_limit}`
       );
       const data = await res.json();
       return data as ResponseType;
@@ -71,7 +77,7 @@ const HomeRecipes: React.FunctionComponent<{
     if (mounted) {
       (async () => {
         setRecipes([]);
-        await client.invalidateQueries(["recipes"], {
+        await client.invalidateQueries(["recipes", limit], {
           exact: true,
         });
       })();
@@ -79,7 +85,7 @@ const HomeRecipes: React.FunctionComponent<{
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [limit]);
 
   const onMomentumScrollBegin = (
     e: NativeSyntheticEvent<NativeScrollEvent>
@@ -182,7 +188,8 @@ const HomeRecipes: React.FunctionComponent<{
         </View>
       ) : (
         <View style={{ flex: 1 }}>
-          {isFetching && recipes.length === 0 ? (
+          {(isFetching && recipes.length === 0) ||
+          !network.isInternetReachable ? (
             <View style={{ flex: 1 }}>
               <Text
                 style={[

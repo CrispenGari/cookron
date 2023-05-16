@@ -11,13 +11,14 @@ bakingRouter.get("/baking", async (ctx) => {
     .sort({ id: 1 }) // oldest to newest
     .limit(1)
     .toArray();
+  const limit: number = Number.parseInt(params.limit) ?? PAGE_LIMIT;
   const last = lastDocument[0];
   if (params.lastId && params.lastId !== "undefined") {
     const recipes = await Baking.find({
       id: { $lt: params.lastId },
     })
       .sort({ id: -1 }) // newest to oldest
-      .limit(PAGE_LIMIT)
+      .limit(limit)
       .toArray();
     ctx.response.status = 200;
     const _lastId = recipes.at(-1)?.id;
@@ -29,10 +30,7 @@ bakingRouter.get("/baking", async (ctx) => {
       category: "baking",
     });
   } else {
-    const recipes = await Baking.find()
-      .sort({ id: -1 })
-      .limit(PAGE_LIMIT)
-      .toArray();
+    const recipes = await Baking.find().sort({ id: -1 }).limit(limit).toArray();
     ctx.response.status = 200;
     const _lastId = recipes.at(-1)?.id;
     return (ctx.response.body = {
@@ -60,6 +58,7 @@ bakingRouter.get("/baking/search", async (ctx) => {
       category: "backing",
     });
   }
+  const limit: number = Number.parseInt(params.limit) ?? PAGE_LIMIT;
   try {
     const lastDocument = await Baking.find({
       $or: [
@@ -75,6 +74,7 @@ bakingRouter.get("/baking/search", async (ctx) => {
       .limit(1)
       .toArray();
     const last = lastDocument[0];
+
     if (params.lastId && params.lastId !== "undefined") {
       const recipes = await Baking.find({
         $or: [
@@ -88,7 +88,7 @@ bakingRouter.get("/baking/search", async (ctx) => {
         id: { $lt: params.lastId },
       })
         .sort({ rattings: -1, id: -1 }) // newest to oldest
-        .limit(PAGE_LIMIT)
+        .limit(limit)
         .toArray();
       ctx.response.status = 200;
       const _lastId = recipes.at(-1)?.id;
@@ -111,7 +111,7 @@ bakingRouter.get("/baking/search", async (ctx) => {
         ],
       })
         .sort({ rattings: -1, id: -1 }) // newest to oldest
-        .limit(PAGE_LIMIT)
+        .limit(limit)
         .toArray();
       ctx.response.status = 200;
       const _lastId = recipes.at(-1)?.id;

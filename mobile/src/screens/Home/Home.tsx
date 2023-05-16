@@ -1,4 +1,5 @@
 import React from "react";
+import { Alert } from "react-native";
 import { AppNavProps } from "../../params";
 import HomeHeader from "../../components/Headers/HomeHeader";
 import { useMusicStore, useNetworkStore } from "../../store";
@@ -25,6 +26,29 @@ const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
       ),
     });
   }, [navigation, term]);
+
+  React.useEffect(() => {
+    if (!network.isInternetReachable) {
+      Alert.alert(
+        "cookron",
+        "We have detected that you don't have active internet connection, you can view your offline recipes.",
+        [
+          {
+            text: "OPEN OFFLINE RECIPES",
+            onPress: () => {
+              navigation.navigate("Favorites");
+            },
+          },
+          {
+            text: "CANCEL",
+            style: "destructive",
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  }, [network]);
+
   React.useEffect(() => {
     if (state.routes.at(-1)?.name !== "Recipe") {
       (async () => {

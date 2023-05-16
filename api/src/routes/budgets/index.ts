@@ -12,12 +12,13 @@ budgetsRouter.get("/budget", async (ctx) => {
     .limit(1)
     .toArray();
   const last = lastDocument[0];
+  const limit: number = Number.parseInt(params.limit) ?? PAGE_LIMIT;
   if (params.lastId && params.lastId !== "undefined") {
     const recipes = await Budget.find({
       id: { $lt: params.lastId },
     })
       .sort({ id: -1 }) // newest to oldest
-      .limit(PAGE_LIMIT)
+      .limit(limit)
       .toArray();
     ctx.response.status = 200;
     const _lastId = recipes.at(-1)?.id;
@@ -29,10 +30,7 @@ budgetsRouter.get("/budget", async (ctx) => {
       category: "budget",
     });
   } else {
-    const recipes = await Budget.find()
-      .sort({ id: -1 })
-      .limit(PAGE_LIMIT)
-      .toArray();
+    const recipes = await Budget.find().sort({ id: -1 }).limit(limit).toArray();
     ctx.response.status = 200;
     const _lastId = recipes.at(-1)?.id;
     return (ctx.response.body = {
@@ -60,6 +58,7 @@ budgetsRouter.get("/budget/search", async (ctx) => {
       category: "budget",
     });
   }
+  const limit: number = Number.parseInt(params.limit) ?? PAGE_LIMIT;
   try {
     const lastDocument = await Budget.find({
       $or: [
@@ -88,7 +87,7 @@ budgetsRouter.get("/budget/search", async (ctx) => {
         id: { $lt: params.lastId },
       })
         .sort({ rattings: -1, id: -1 }) // newest to oldest
-        .limit(PAGE_LIMIT)
+        .limit(limit)
         .toArray();
       ctx.response.status = 200;
       const _lastId = recipes.at(-1)?.id;
@@ -111,7 +110,7 @@ budgetsRouter.get("/budget/search", async (ctx) => {
         ],
       })
         .sort({ rattings: -1, id: -1 }) // newest to oldest
-        .limit(PAGE_LIMIT)
+        .limit(limit)
         .toArray();
       ctx.response.status = 200;
       const _lastId = recipes.at(-1)?.id;

@@ -10,6 +10,7 @@ import Recipe from "../../Recipe/Recipe";
 import RippleLoadingIndicator from "../../RippleLoadingIndicator/RippleLoadingIndicator";
 import RecipeSkeleton from "../../skeletons/RecipeSkeleton/RecipeSkeleton";
 import { styles } from "../../../styles";
+import { useNetworkStore, useSettingsStore } from "../../../store";
 
 export const CategoryRecipes: React.FunctionComponent<{
   category: MainCategoryType;
@@ -26,13 +27,17 @@ export const CategoryRecipes: React.FunctionComponent<{
 }) => {
   const [hasNextPage, setHasNextPage] = React.useState<boolean>(false);
   const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
+  const {
+    settings: { limit },
+  } = useSettingsStore();
+  const { network } = useNetworkStore();
   const client = useQueryClient();
   const { isLoading, fetchNextPage, isFetching } = useInfiniteQuery({
-    queryKey: ["recipes", category],
+    queryKey: ["recipes", category, limit],
     queryFn: async ({ pageParam, queryKey }) => {
-      const [_, cate] = queryKey;
+      const [_, cate, _limit] = queryKey;
       const res = await fetch(
-        `${serverBaseURL}/api/recipes/${cate}?lastId=${pageParam}`
+        `${serverBaseURL}/api/recipes/${cate}?lastId=${pageParam}&limit=${_limit}`
       );
       const data = await res.json();
       return data as ResponseType;
@@ -51,13 +56,15 @@ export const CategoryRecipes: React.FunctionComponent<{
     if (mounted && !!category) {
       (async () => {
         setRecipes([]);
-        await client.invalidateQueries(["recipes", category], { exact: true });
+        await client.invalidateQueries(["recipes", category, limit], {
+          exact: true,
+        });
       })();
     }
     return () => {
       mounted = false;
     };
-  }, [category]);
+  }, [category, limit]);
   return (
     <ScrollView
       contentContainerStyle={{
@@ -82,7 +89,7 @@ export const CategoryRecipes: React.FunctionComponent<{
         }
       }}
     >
-      {isLoading ? (
+      {isLoading || !network.isInternetReachable ? (
         Array(21)
           .fill(null)
           .map((_, index) => <RecipeSkeleton key={index} />)

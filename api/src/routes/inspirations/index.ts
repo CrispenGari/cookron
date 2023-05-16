@@ -12,12 +12,13 @@ inspirationsRouter.get("/inspiration", async (ctx) => {
     .limit(1)
     .toArray();
   const last = lastDocument[0];
+  const limit: number = Number.parseInt(params.limit) ?? PAGE_LIMIT;
   if (params.lastId && params.lastId !== "undefined") {
     const recipes = await Inspiration.find({
       id: { $lt: params.lastId },
     })
       .sort({ id: -1 }) // newest to oldest
-      .limit(PAGE_LIMIT)
+      .limit(limit)
       .toArray();
     ctx.response.status = 200;
     const _lastId = recipes.at(-1)?.id;
@@ -31,7 +32,7 @@ inspirationsRouter.get("/inspiration", async (ctx) => {
   } else {
     const recipes = await Inspiration.find()
       .sort({ id: -1 })
-      .limit(PAGE_LIMIT)
+      .limit(limit)
       .toArray();
     ctx.response.status = 200;
     const _lastId = recipes.at(-1)?.id;
@@ -60,6 +61,7 @@ inspirationsRouter.get("/inspiration/search", async (ctx) => {
       category: "inspiration",
     });
   }
+  const limit: number = Number.parseInt(params.limit) ?? PAGE_LIMIT;
   try {
     const lastDocument = await Inspiration.find({
       $or: [
@@ -88,7 +90,7 @@ inspirationsRouter.get("/inspiration/search", async (ctx) => {
         id: { $lt: params.lastId },
       })
         .sort({ rattings: -1, id: -1 }) // newest to oldest
-        .limit(PAGE_LIMIT)
+        .limit(limit)
         .toArray();
       ctx.response.status = 200;
       const _lastId = recipes.at(-1)?.id;
@@ -111,7 +113,7 @@ inspirationsRouter.get("/inspiration/search", async (ctx) => {
         ],
       })
         .sort({ rattings: -1, id: -1 }) // newest to oldest
-        .limit(PAGE_LIMIT)
+        .limit(limit)
         .toArray();
       ctx.response.status = 200;
       const _lastId = recipes.at(-1)?.id;

@@ -12,12 +12,13 @@ recipesRouter.get("/recipes", async (ctx) => {
     .limit(1)
     .toArray();
   const last = lastDocument[0];
+  const limit: number = Number.parseInt(params.limit) ?? PAGE_LIMIT;
   if (params.lastId && params.lastId !== "undefined") {
     const recipes = await Recipe.find({
       id: { $lt: params.lastId },
     })
       .sort({ id: -1 }) // newest to oldest
-      .limit(PAGE_LIMIT)
+      .limit(limit)
       .toArray();
     ctx.response.status = 200;
     const _lastId = recipes.at(-1)?.id;
@@ -29,10 +30,7 @@ recipesRouter.get("/recipes", async (ctx) => {
       category: "recipes",
     });
   } else {
-    const recipes = await Recipe.find()
-      .sort({ id: -1 })
-      .limit(PAGE_LIMIT)
-      .toArray();
+    const recipes = await Recipe.find().sort({ id: -1 }).limit(limit).toArray();
     ctx.response.status = 200;
     const _lastId = recipes.at(-1)?.id;
     return (ctx.response.body = {
@@ -54,7 +52,7 @@ recipesRouter.get("/recipes/search", async (ctx) => {
   const params = getQuery(ctx, { mergeParams: true });
   const searchTerm = params.searchTerm;
   await ctx.response.headers.set("Content-Type", "application/json");
-
+  const limit: number = Number.parseInt(params.limit) ?? PAGE_LIMIT;
   if (!searchTerm || searchTerm.trim().length < 3) {
     ctx.response.status = 200;
     return (ctx.response.body = {
@@ -93,7 +91,7 @@ recipesRouter.get("/recipes/search", async (ctx) => {
         id: { $lt: params.lastId },
       })
         .sort({ rattings: -1, id: -1 }) // newest to oldest
-        .limit(PAGE_LIMIT)
+        .limit(limit)
         .toArray();
       ctx.response.status = 200;
       const _lastId = recipes.at(-1)?.id;
@@ -116,7 +114,7 @@ recipesRouter.get("/recipes/search", async (ctx) => {
         ],
       })
         .sort({ rattings: -1, id: -1 }) // newest to oldest
-        .limit(PAGE_LIMIT)
+        .limit(limit)
         .toArray();
       ctx.response.status = 200;
       const _lastId = recipes.at(-1)?.id;

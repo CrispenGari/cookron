@@ -9,6 +9,7 @@ import { SettingsType } from "../../types";
 import { store } from "../../utils";
 import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import { useSettingsStore } from "../../store";
+import PageLimitSettings from "../../components/PageLimitSettings/PageLimitSettings";
 
 const Settings: React.FunctionComponent<AppNavProps<"Settings">> = ({
   navigation,
@@ -20,7 +21,6 @@ const Settings: React.FunctionComponent<AppNavProps<"Settings">> = ({
   }, [navigation]);
   const { settings, setSettings } = useSettingsStore((s) => s);
 
-  console.log({ settings });
   return (
     <ScrollView style={{ backgroundColor: COLORS.main, flex: 1 }}>
       <Label title="MISC" />
@@ -46,10 +46,12 @@ const Settings: React.FunctionComponent<AppNavProps<"Settings">> = ({
             haptics: !settings.haptics,
             limit: settings.limit,
           };
-          await store(KEYS.APP_SETTINGS, JSON.stringify(settings));
+          await store(KEYS.APP_SETTINGS, JSON.stringify(s));
           setSettings(s);
         }}
       />
+      <Label title="CUSTOMS & NETWORK" />
+      <PageLimitSettings />
       <Label title="ISSUES & BUGS" />
       <SettingItem
         title="Report an Issue"
