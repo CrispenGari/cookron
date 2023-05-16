@@ -58,7 +58,9 @@ const HomeRecipes: React.FunctionComponent<{
     queryFn: async ({ pageParam, queryKey }) => {
       const [_, _limit] = queryKey;
       const res = await fetch(
-        `${serverBaseURL}/api/recipes/recipes?lastId=${pageParam}&limit=${_limit}`
+        `${serverBaseURL}/api/recipes/recipes?lastId=${
+          pageParam ?? ""
+        }&limit=${_limit}`
       );
       const data = await res.json();
       return data as ResponseType;

@@ -32,7 +32,9 @@ const HomeSearchResults: React.FunctionComponent<Props> = ({
     queryFn: async ({ pageParam, queryKey }) => {
       const [_, term, _limit] = queryKey;
       const res = await fetch(
-        `${serverBaseURL}/api/recipes/recipes/search?searchTerm=${term}&lastId=${pageParam}&limit=${_limit}`
+        `${serverBaseURL}/api/recipes/recipes/search?searchTerm=${term}&lastId=${
+          pageParam ?? ""
+        }&limit=${_limit}`
       );
       const data = await res.json();
       return data as ResponseType;

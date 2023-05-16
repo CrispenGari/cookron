@@ -37,7 +37,9 @@ export const CategoryRecipes: React.FunctionComponent<{
     queryFn: async ({ pageParam, queryKey }) => {
       const [_, cate, _limit] = queryKey;
       const res = await fetch(
-        `${serverBaseURL}/api/recipes/${cate}?lastId=${pageParam}&limit=${_limit}`
+        `${serverBaseURL}/api/recipes/${cate}?lastId=${
+          pageParam ?? ""
+        }&limit=${_limit}`
       );
       const data = await res.json();
       return data as ResponseType;

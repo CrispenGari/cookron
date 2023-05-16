@@ -4,7 +4,7 @@ export const KEYS = {
   BOOK_MARKS: "BOOK_MARKS",
 };
 
-export const serverBaseURL = "https://2a5c-102-66-85-242.ngrok-free.app";
+export const serverBaseURL = "https://cookron.onrender.com";
 export const COLORS = {
   main: "#FEF7DC",
   primary: "#E6DDC6",
