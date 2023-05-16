@@ -1,127 +1,97 @@
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import React from "react";
 import { NativeSyntheticEvent, NativeScrollEvent } from "react-native";
-import { View, Text, ScrollView } from "react-native";
-import { serverBaseURL, COLORS } from "../../../constants";
+import { View, Keyboard, TouchableOpacity, TextInput } from "react-native";
+import * as Animatable from "react-native-animatable";
 import { AppParamList } from "../../../params";
-import { MainCategoryType, RecipeType, ResponseType } from "../../../types";
-import Recipe from "../../Recipe/Recipe";
-import RippleLoadingIndicator from "../../RippleLoadingIndicator/RippleLoadingIndicator";
-import RecipeSkeleton from "../../skeletons/RecipeSkeleton/RecipeSkeleton";
-import { styles } from "../../../styles";
-import { useNetworkStore, useSettingsStore } from "../../../store";
-
+import { MainCategoryType } from "../../../types";
+import CategoryAllRecipes from "./CategoryAllRecipes";
+import { COLORS, FONTS } from "../../../constants";
+import { useDebounce, useMediaQuery } from "../../../hooks";
+import { Ionicons } from "@expo/vector-icons";
+import CategoryFilteredRecipes from "./CategoryFilteredRecipes";
 export const CategoryRecipes: React.FunctionComponent<{
   category: MainCategoryType;
   toggle: () => void;
   navigation: StackNavigationProp<AppParamList, "Home">;
   onMomentumScrollBegin: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
   onMomentumScrollEnd: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
-}> = ({
-  category,
-  onMomentumScrollBegin,
-  onMomentumScrollEnd,
-  toggle,
-  navigation,
-}) => {
-  const [hasNextPage, setHasNextPage] = React.useState<boolean>(false);
-  const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
+}> = (props) => {
+  const [term, setTerm] = React.useState("");
+  const [focused, setFocused] = React.useState<boolean>(false);
+  const [openSearch, setOpenSearch] = React.useState<boolean>(false);
+  const searchTerm = useDebounce(term, 1000);
   const {
-    settings: { limit },
-  } = useSettingsStore();
-  const { network } = useNetworkStore();
-  const client = useQueryClient();
-  const { isLoading, fetchNextPage, isFetching } = useInfiniteQuery({
-    queryKey: ["recipes", category, limit],
-    queryFn: async ({ pageParam, queryKey }) => {
-      const [_, cate, _limit] = queryKey;
-      const res = await fetch(
-        `${serverBaseURL}/api/recipes/${cate}?lastId=${
-          pageParam ?? ""
-        }&limit=${_limit}`
-      );
-      const data = await res.json();
-      return data as ResponseType;
-    },
-    staleTime: Infinity,
-    getNextPageParam: ({ lastId }) => lastId,
-    keepPreviousData: true,
-    onSuccess: (data) => {
-      setHasNextPage(data.pages.at(-1)?.hasNext || false);
-      setRecipes(data.pages.flatMap((page) => page.recipes));
-    },
-  });
-
-  React.useEffect(() => {
-    let mounted: boolean = true;
-    if (mounted && !!category) {
-      (async () => {
-        setRecipes([]);
-        await client.invalidateQueries(["recipes", category, limit], {
-          exact: true,
-        });
-      })();
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [category, limit]);
+    dimension: { width },
+  } = useMediaQuery();
   return (
-    <ScrollView
-      contentContainerStyle={{
-        padding: 10,
-        flexWrap: "wrap",
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-      }}
-      style={{ flex: 1 }}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      scrollEventThrottle={16}
-      onMomentumScrollBegin={onMomentumScrollBegin}
-      onMomentumScrollEnd={onMomentumScrollEnd}
-      onScroll={async ({ nativeEvent }) => {
-        const isAtEnd =
-          (
-            nativeEvent.contentOffset.y + nativeEvent.layoutMeasurement.height
-          ).toFixed(0) === nativeEvent.contentSize.height.toFixed(0);
-        if (isAtEnd && hasNextPage) {
-          await fetchNextPage();
-        }
-      }}
-    >
-      {isLoading || !network.isInternetReachable ? (
-        Array(21)
-          .fill(null)
-          .map((_, index) => <RecipeSkeleton key={index} />)
-      ) : recipes.length === 0 && !isFetching && !isLoading ? (
-        <Text style={[styles.p, { padding: 20, textAlign: "center" }]}>
-          No Recipes.
-        </Text>
-      ) : (
-        recipes.map((recipe) => (
-          <Recipe
-            navigation={navigation}
-            recipe={recipe}
-            index={0}
-            key={recipe.id}
-            toggle={toggle}
-          />
-        ))
-      )}
-      <View
+    <View style={{ flex: 1 }}>
+      <Animatable.View
+        animation="slideInRight"
+        duration={500}
         style={{
-          width: "100%",
-          justifyContent: "center",
+          backgroundColor: COLORS.primary,
+          flexDirection: "row",
+          padding: 5,
           alignItems: "center",
-          height: 100,
+          marginHorizontal: 10,
+          borderRadius: 999,
+          paddingHorizontal: 10,
+          maxWidth: 500,
+          marginVertical: 5,
+          alignSelf: width >= 600 ? "flex-end" : "center",
         }}
       >
-        {isFetching ? (
-          <RippleLoadingIndicator color={COLORS.secondary} size={20} />
-        ) : null}
-      </View>
-    </ScrollView>
+        <Animatable.View
+          animation={focused ? "fadeInLeft" : "fadeInRight"}
+          duration={400}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              if (focused) {
+                setTerm("");
+                setOpenSearch(false);
+                Keyboard.dismiss();
+              }
+            }}
+            activeOpacity={0.7}
+          >
+            {focused ? (
+              <Ionicons
+                name="arrow-back-outline"
+                size={24}
+                color={COLORS.tertiary}
+              />
+            ) : (
+              <Ionicons name="search-sharp" size={24} color={COLORS.tertiary} />
+            )}
+          </TouchableOpacity>
+        </Animatable.View>
+        <TextInput
+          placeholder={`Search Recipes, Dishes, Food, etc. in ${props.category} `}
+          value={term}
+          placeholderTextColor={COLORS.tertiary}
+          onChangeText={(text) => setTerm(text)}
+          style={{
+            fontSize: width > 600 ? 20 : 16,
+            marginLeft: 15,
+            flex: 1,
+            fontFamily: FONTS.regular,
+          }}
+          onBlur={() => {
+            setFocused(false);
+          }}
+          onFocus={() => {
+            setFocused(true);
+            setOpenSearch(true);
+          }}
+        />
+      </Animatable.View>
+      {openSearch ? (
+        <CategoryFilteredRecipes {...props} searchTerm={searchTerm} />
+      ) : (
+        <CategoryAllRecipes {...props} />
+      )}
+    </View>
   );
 };

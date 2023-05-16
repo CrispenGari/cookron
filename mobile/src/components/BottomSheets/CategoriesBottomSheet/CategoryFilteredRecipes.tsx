@@ -1,23 +1,28 @@
 import { ScrollView, View } from "react-native";
 import React from "react";
-import { COLORS, serverBaseURL } from "../../constants";
+
 import { StackNavigationProp } from "@react-navigation/stack";
-import { AppParamList } from "../../params";
-import { styles } from "../../styles";
+
 import TypeWriter from "react-native-typewriter";
-import { RecipeType, ResponseType } from "../../types";
+
 import { useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
-import RippleLoadingIndicator from "../RippleLoadingIndicator/RippleLoadingIndicator";
-import SearchResult from "../SearchResult/SearchResult";
-import { useNetworkStore, useSettingsStore } from "../../store";
+import { serverBaseURL, COLORS } from "../../../constants";
+import { AppParamList } from "../../../params";
+import { useSettingsStore, useNetworkStore } from "../../../store";
+import { styles } from "../../../styles";
+import { MainCategoryType, RecipeType, ResponseType } from "../../../types";
+import RippleLoadingIndicator from "../../RippleLoadingIndicator/RippleLoadingIndicator";
+import SearchResult from "../../SearchResult/SearchResult";
 
 interface Props {
   navigation: StackNavigationProp<AppParamList, "Home">;
   searchTerm: string;
+  category: MainCategoryType;
 }
-const HomeSearchResults: React.FunctionComponent<Props> = ({
+const CategoryFilteredRecipes: React.FunctionComponent<Props> = ({
   navigation,
   searchTerm,
+  category,
 }) => {
   const [hasNextPage, setHasNextPage] = React.useState<boolean>(false);
   const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
@@ -27,11 +32,11 @@ const HomeSearchResults: React.FunctionComponent<Props> = ({
   const { network } = useNetworkStore();
   const client = useQueryClient();
   const { isLoading, fetchNextPage, isFetching } = useInfiniteQuery({
-    queryKey: ["recipes", searchTerm, limit],
+    queryKey: ["recipes", searchTerm, limit, category],
     queryFn: async ({ pageParam, queryKey }) => {
-      const [_, term, _limit] = queryKey;
+      const [_, term, _limit, _category] = queryKey;
       const res = await fetch(
-        `${serverBaseURL}/api/recipes/recipes/search?searchTerm=${term}&lastId=${
+        `${serverBaseURL}/api/recipes/${_category}/search?searchTerm=${term}&lastId=${
           pageParam ?? ""
         }&limit=${_limit}`
       );
@@ -90,7 +95,7 @@ const HomeSearchResults: React.FunctionComponent<Props> = ({
           typing={1}
           maxDelay={-50}
         >
-          {`You don't have internet connection to search in the recipe database.`}
+          {`You don't have internet connection to search in the "${category}" in our recipe database.`}
         </TypeWriter>
       </ScrollView>
     );
@@ -130,7 +135,7 @@ const HomeSearchResults: React.FunctionComponent<Props> = ({
           maxDelay={-50}
         >
           Search Recipes, Dishes, Food, Recipe Authors, Description, etc. from
-          the engine.
+          the {category} database.
         </TypeWriter>
       )}
       {recipes.length === 0 &&
@@ -149,7 +154,7 @@ const HomeSearchResults: React.FunctionComponent<Props> = ({
           typing={1}
           maxDelay={-50}
         >
-          {`Couldn't find the matches for the search "${searchTerm}".`}
+          {`Couldn't find the matches for the search "${searchTerm}" for the category ${category}.`}
         </TypeWriter>
       ) : null}
 
@@ -187,4 +192,4 @@ const HomeSearchResults: React.FunctionComponent<Props> = ({
   );
 };
 
-export default HomeSearchResults;
+export default CategoryFilteredRecipes;

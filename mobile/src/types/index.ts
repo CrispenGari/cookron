@@ -1,9 +1,9 @@
-import * as Network from "expo-network";
+import { NetInfoStateType } from "@react-native-community/netinfo";
 
 export type NetworkType = {
-  type: Network.NetworkStateType | undefined;
-  isConnected: boolean | undefined;
-  isInternetReachable: boolean | undefined;
+  type: NetInfoStateType | null;
+  isConnected: boolean | null;
+  isInternetReachable: boolean | null;
 };
 
 export type SettingsType = {

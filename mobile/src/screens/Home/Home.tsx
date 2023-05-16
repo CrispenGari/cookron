@@ -28,8 +28,9 @@ const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
   }, [navigation, term]);
 
   React.useEffect(() => {
-    if (!network.isInternetReachable) {
+    if (!network.isInternetReachable && network.isInternetReachable !== null) {
       onNotification();
+
       Alert.alert(
         "cookron",
         "We have detected that you don't have active internet connection, you can view your offline recipes.",
@@ -45,7 +46,9 @@ const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
             style: "destructive",
           },
         ],
-        { cancelable: false }
+        {
+          cancelable: false,
+        }
       );
     }
   }, [network]);

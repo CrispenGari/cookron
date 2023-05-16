@@ -6,9 +6,9 @@ export const useNetworkStore = create<{
   setNetwork: (network: Required<NetworkType>) => void;
 }>((set) => ({
   network: {
-    isConnected: false,
-    isInternetReachable: false,
-    type: undefined,
+    isConnected: true,
+    isInternetReachable: true,
+    type: null,
   },
   setNetwork: (network: Required<NetworkType>) => set({ network }),
 }));

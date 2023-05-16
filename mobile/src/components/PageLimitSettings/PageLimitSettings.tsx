@@ -10,6 +10,7 @@ const PageLimitSettings: React.FunctionComponent<{}> = ({}) => {
   return (
     <View style={{ padding: 10 }}>
       <DropdownSelect
+        modalOptionsContainerStyle={{ backgroundColor: COLORS.main }}
         label={`Current Limit (${settings.limit})`}
         placeholder={settings.limit.toString()}
         options={[11, 21, 31, 41, 51, 61, 71, 81, 91, 101].map((v) => ({

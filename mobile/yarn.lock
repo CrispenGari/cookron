@@ -1747,6 +1747,11 @@
     prompts "^2.4.0"
     semver "^6.3.0"
 
+"@react-native-community/netinfo@9.3.7":
+  version "9.3.7"
+  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-9.3.7.tgz#92407f679f00bae005c785a9284e61d63e292b34"
+  integrity sha512-+taWmE5WpBp0uS6kf+bouCx/sn89G9EpR4s2M/ReLvctVIFL2Qh8WnWfBxqK9qwgmFha/uqjSr2Gq03OOtiDcw==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@react-native/assets/-/assets-1.0.0.tgz#c6f9bf63d274bafc8e970628de24986b30a55c8e"
@@ -5815,10 +5820,10 @@ react-native-gradle-plugin@^0.71.17:
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.18.tgz#20ef199bc85be32e45bb6cc069ec2e7dcb1a74a6"
   integrity sha512-7F6bD7B8Xsn3JllxcwHhFcsl9aHIig47+3eN4IHFNqfLhZr++3ElDrcqfMzugM+niWbaMi7bJ0kAkAL8eCpdWg==
 
-react-native-input-select@^0.30.0:
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/react-native-input-select/-/react-native-input-select-0.30.0.tgz#ba41dba155fb950c2eaeb86b47ae2cdc0eee95ee"
-  integrity sha512-IToHVywbYmNTwjXAVUdFm5v86DTDdiOaYpeITGSfHOhT1XTxsz6s/fAMQ35UYb0SRzNo4vaONqvjpQYnvGrzaQ==
+react-native-input-select@^0.31.0:
+  version "0.31.0"
+  resolved "https://registry.yarnpkg.com/react-native-input-select/-/react-native-input-select-0.31.0.tgz#e854a492504639f84a9b20ec84e1dd37d688e505"
+  integrity sha512-lm0y+2r4sPmcjaBBAL121zMSpPkt15J2KdVtYf/QpTpoSB3Hxc+7H5Q6QvIOQ64XJqSdYpcuFPLvi0et/Kt2Jw==
 
 react-native-modal@^13.0.1:
   version "13.0.1"
