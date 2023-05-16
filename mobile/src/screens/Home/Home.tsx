@@ -6,7 +6,7 @@ import { useMusicStore, useNetworkStore } from "../../store";
 import { useDebounce } from "../../hooks";
 import HomeRecipes from "../../components/HomeRecipes/HomeRecipes";
 import HomeSearchResults from "../../components/HomeSearchResults/HomeSearchResults";
-import { stopMusic } from "../../utils";
+import { onNotification, stopMusic } from "../../utils";
 import { useNavigationState } from "@react-navigation/native";
 const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
   const { network } = useNetworkStore();
@@ -29,6 +29,7 @@ const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
 
   React.useEffect(() => {
     if (!network.isInternetReachable) {
+      onNotification();
       Alert.alert(
         "cookron",
         "We have detected that you don't have active internet connection, you can view your offline recipes.",

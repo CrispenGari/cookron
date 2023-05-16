@@ -4,6 +4,7 @@ import { Audio } from "expo-av";
 
 let sound: Audio.Sound | undefined;
 export const onImpact = () => Haptics.impactAsync();
+export const onNotification = () => Haptics.notificationAsync();
 export const playMusic = async () => {
   const { sound: s, status } = await Audio.Sound.createAsync(
     require("../../assets/sounds/music.mp3"),
