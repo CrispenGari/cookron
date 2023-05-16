@@ -26,8 +26,7 @@ def hello_world():
             jsonify(
                 {
                     "code": 200,
-                    "message": "Hello world",
-                    "password": os.environ[Keys.DATABASE_NAME],
+                    "message": "Cookron API",
                 }
             )
         ),
