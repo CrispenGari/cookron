@@ -21,6 +21,7 @@ class DR:
     def __call__(self):
         self.dataframe["score"] = self.dataframe.apply(self.weighted_rating, axis=1)
         self.dataframe.sort_values("score", ascending=False, inplace=True)
+        self.dataframe.drop_duplicates(subset=["name"], inplace=True)
         return [i for i in self.dataframe["id"]]
 
 
