@@ -5,3 +5,4 @@ class Keys:
 
 
 PAGE_LIMIT = 21
+MAX_SEARCH_RECOMMENDATION = PAGE_LIMIT * 2  # 2 pages
