@@ -8,29 +8,39 @@ import TypeWriter from "react-native-typewriter";
 import { useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { serverBaseURL, COLORS } from "../../../constants";
 import { AppParamList } from "../../../params";
-import { useSettingsStore, useNetworkStore } from "../../../store";
+import {
+  useSettingsStore,
+  useNetworkStore,
+  useSearchHistoryStore,
+} from "../../../store";
 import { styles } from "../../../styles";
 import { MainCategoryType, RecipeType, ResponseType } from "../../../types";
 import RippleLoadingIndicator from "../../RippleLoadingIndicator/RippleLoadingIndicator";
 import SearchResult from "../../SearchResult/SearchResult";
+import SearchHistoryItem from "../../SearchHistoryItem/SearchHistoryItem";
 
 interface Props {
   navigation: StackNavigationProp<AppParamList, "Home">;
   searchTerm: string;
   category: MainCategoryType;
   toggle: () => void;
+  setTerm: React.Dispatch<React.SetStateAction<string>>;
 }
 const CategoryFilteredRecipes: React.FunctionComponent<Props> = ({
   navigation,
   searchTerm,
   category,
   toggle,
+  setTerm,
 }) => {
   const [hasNextPage, setHasNextPage] = React.useState<boolean>(false);
   const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
   const {
     settings: { limit },
   } = useSettingsStore();
+  const { history } = useSearchHistoryStore();
+  const [searchHistory, setSearchHistory] = React.useState<RecipeType[]>([]);
+
   const { network } = useNetworkStore();
   const client = useQueryClient();
   const { isLoading, fetchNextPage, isFetching } = useInfiniteQuery({
@@ -72,6 +82,14 @@ const CategoryFilteredRecipes: React.FunctionComponent<Props> = ({
       mounted = false;
     };
   }, [searchTerm, limit]);
+
+  React.useEffect(() => {
+    setSearchHistory(
+      history
+        .filter(({ maincategory }) => maincategory === category)
+        .slice(0, 3)
+    );
+  }, [history, category]);
 
   if (!network.isInternetReachable) {
     return (
@@ -123,7 +141,7 @@ const CategoryFilteredRecipes: React.FunctionComponent<Props> = ({
         }
       }}
     >
-      {!!!searchTerm && (
+      {!!!searchTerm && searchHistory.length === 0 ? (
         <TypeWriter
           style={[
             styles.p,
@@ -139,7 +157,7 @@ const CategoryFilteredRecipes: React.FunctionComponent<Props> = ({
           Search Recipes, Dishes, Food, Recipe Authors, Description, etc. from
           the {category} database.
         </TypeWriter>
-      )}
+      ) : null}
       {recipes.length === 0 &&
       searchTerm.trim().length > 3 &&
       !isFetching &&
@@ -160,14 +178,18 @@ const CategoryFilteredRecipes: React.FunctionComponent<Props> = ({
         </TypeWriter>
       ) : null}
 
-      {recipes.map((recipe) => (
-        <SearchResult
-          toggle={toggle}
-          key={recipe.id}
-          recipe={recipe}
-          navigation={navigation}
-        />
-      ))}
+      {searchHistory.length > 0 && recipes.length === 0 && !searchTerm
+        ? searchHistory.map((h) => (
+            <SearchHistoryItem setTerm={setTerm} history={h} key={h.id} />
+          ))
+        : recipes.map((recipe) => (
+            <SearchResult
+              toggle={toggle}
+              key={recipe.id}
+              recipe={recipe}
+              navigation={navigation}
+            />
+          ))}
 
       {isFetching && recipes.length === 0 ? (
         <View

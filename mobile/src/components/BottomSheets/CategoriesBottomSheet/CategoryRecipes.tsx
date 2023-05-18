@@ -89,7 +89,11 @@ export const CategoryRecipes: React.FunctionComponent<{
         />
       </Animatable.View>
       {openSearch ? (
-        <CategoryFilteredRecipes {...props} searchTerm={searchTerm} />
+        <CategoryFilteredRecipes
+          setTerm={setTerm}
+          {...props}
+          searchTerm={searchTerm}
+        />
       ) : (
         <View style={{ flex: 1 }}>
           <CategoryRecipesRecommendation {...props} />

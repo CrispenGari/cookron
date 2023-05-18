@@ -48,7 +48,6 @@ const SearchResult: React.FunctionComponent<Props> = ({
         flex: 1,
         flexDirection: "row",
         alignItems: "flex-start",
-        // maxWidth: width <= 600 ? 150 : 200,
       }}
     >
       <View style={{ width: 80 }}>

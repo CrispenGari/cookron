@@ -62,7 +62,11 @@ const Home: React.FunctionComponent<AppNavProps<"Home">> = ({ navigation }) => {
     }
   }, [state]);
   return openSearch ? (
-    <HomeSearchResults searchTerm={searchTerm} navigation={navigation} />
+    <HomeSearchResults
+      setTerm={setTerm}
+      searchTerm={searchTerm}
+      navigation={navigation}
+    />
   ) : (
     <HomeRecipes navigation={navigation} />
   );
