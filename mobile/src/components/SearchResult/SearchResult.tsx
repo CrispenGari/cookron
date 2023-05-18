@@ -25,7 +25,7 @@ const SearchResult: React.FunctionComponent<Props> = ({
     dimension: { width },
   } = useMediaQuery();
   const {
-    settings: { haptics },
+    settings: { haptics, historyEnabled },
   } = useSettingsStore();
   const [loaded, setLoaded] = React.useState<boolean>(false);
   const { setSearchHistory, history } = useSearchHistoryStore();
@@ -40,10 +40,16 @@ const SearchResult: React.FunctionComponent<Props> = ({
         if (typeof toggle !== "undefined") {
           toggle();
         }
-        // add the recipe to the search history
-        const recipes = [recipe, ...history.filter((r) => r.id !== recipe.id)];
-        setSearchHistory(recipes);
-        await store(KEYS.SEARCH_HISTORY, JSON.stringify(recipes));
+
+        if (historyEnabled) {
+          // add the recipe to the search history
+          const recipes = [
+            recipe,
+            ...history.filter((r) => r.id !== recipe.id),
+          ];
+          setSearchHistory(recipes);
+          await store(KEYS.SEARCH_HISTORY, JSON.stringify(recipes));
+        }
         navigation.navigate("Recipe", {
           recipe: JSON.stringify(recipe),
         });

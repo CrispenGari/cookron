@@ -7,14 +7,17 @@ interface Props {
   onPress: () => void;
   title: string;
   Icon: React.ReactNode;
+  disabled?: boolean;
 }
 const SettingItem: React.FunctionComponent<Props> = ({
   onPress,
   title,
   Icon,
+  disabled,
 }) => {
   return (
     <TouchableOpacity
+      disabled={disabled}
       style={{
         flexDirection: "row",
         justifyContent: "space-between",

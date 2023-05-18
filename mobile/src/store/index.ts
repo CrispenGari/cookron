@@ -32,7 +32,7 @@ export const useSettingsStore = create<{
   settings: Required<SettingsType>;
   setSettings: (settings: SettingsType) => void;
 }>((set) => ({
-  settings: { haptics: true, limit: 21 },
+  settings: { haptics: true, limit: 21, historyEnabled: true },
   setSettings: (settings: SettingsType) => set({ settings }),
 }));
 

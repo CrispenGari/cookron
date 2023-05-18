@@ -9,6 +9,7 @@ export type NetworkType = {
 export type SettingsType = {
   haptics: boolean;
   limit: number;
+  historyEnabled: boolean;
 };
 
 export type RecipeType = {

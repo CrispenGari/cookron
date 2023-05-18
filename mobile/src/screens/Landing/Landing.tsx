@@ -1,12 +1,12 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { COLORS, FONTS, KEYS, logo } from "../../constants";
+import { COLORS, KEYS, logo } from "../../constants";
 import { AppNavProps } from "../../params";
 import { styles } from "../../styles";
 import * as Animatable from "react-native-animatable";
 import TypeWriter from "react-native-typewriter";
 import { LinearGradient } from "expo-linear-gradient";
-import { del, retrieve, store } from "../../utils";
+import { retrieve, store } from "../../utils";
 import Loading from "../../components/Loading/Loading";
 import { SettingsType } from "../../types";
 
@@ -163,6 +163,7 @@ const Landing: React.FunctionComponent<AppNavProps<"Landing">> = ({
               const settings: SettingsType = {
                 haptics: true,
                 limit: 21,
+                historyEnabled: true,
               };
               await store(KEYS.APP_SETTINGS, JSON.stringify(settings));
               navigation.replace("Home");
