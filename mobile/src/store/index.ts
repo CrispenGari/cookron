@@ -1,5 +1,20 @@
 import { create } from "zustand";
-import { NetworkType, SettingsType } from "../types";
+import { NetworkType, RecipeType, SettingsType } from "../types";
+export const useSearchHistoryStore = create<{
+  history: RecipeType[];
+  setSearchHistory: (seachHistory: RecipeType[]) => void;
+}>((set) => ({
+  history: [],
+  setSearchHistory: (history: RecipeType[]) => set({ history }),
+}));
+
+export const useBookmarksStore = create<{
+  bookmarks: RecipeType[];
+  setBookmarks: (bookmarks: RecipeType[]) => void;
+}>((set) => ({
+  bookmarks: [],
+  setBookmarks: (bookmarks: RecipeType[]) => set({ bookmarks }),
+}));
 
 export const useNetworkStore = create<{
   network: Required<NetworkType>;

@@ -6,12 +6,12 @@ import { RecipeType } from "../../types";
 import { retrieve } from "../../utils";
 import Recipe from "../../components/Recipe/Recipe";
 import FavoritesHeader from "../../components/Headers/FavoritesHeader";
+import { useBookmarksStore } from "../../store";
 
 const Favorites: React.FunctionComponent<AppNavProps<"Favorites">> = ({
   navigation,
 }) => {
-  const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
-
+  const { bookmarks, setBookmarks } = useBookmarksStore();
   React.useLayoutEffect(() => {
     navigation.setOptions({
       header: (props) => <FavoritesHeader {...props} />,
@@ -22,7 +22,8 @@ const Favorites: React.FunctionComponent<AppNavProps<"Favorites">> = ({
     (async () => {
       const res = await retrieve(KEYS.BOOK_MARKS);
       const data: Array<RecipeType> = res ? JSON.parse(res) : [];
-      setRecipes(data);
+
+      setBookmarks(data);
     })();
   }, []);
   return (
@@ -39,7 +40,7 @@ const Favorites: React.FunctionComponent<AppNavProps<"Favorites">> = ({
         }}
         style={{ flex: 1 }}
       >
-        {recipes.map((recipe, index) => (
+        {bookmarks.map((recipe, index) => (
           <Recipe
             recipe={recipe}
             key={recipe.id}

@@ -24,6 +24,7 @@ const HomeSearchResults: React.FunctionComponent<Props> = ({
   const {
     settings: { limit },
   } = useSettingsStore();
+  const [searchHistory, setSearchHistory] = React.useState<RecipeType[]>([]);
   const { network } = useNetworkStore();
   const client = useQueryClient();
   const { isLoading, fetchNextPage, isFetching } = useInfiniteQuery({

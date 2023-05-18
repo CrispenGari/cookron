@@ -2,9 +2,10 @@ export const KEYS = {
   NEW_TO_APP: "NEW_TO_APP",
   APP_SETTINGS: "APP_SETTINGS",
   BOOK_MARKS: "BOOK_MARKS",
+  SEARCH_HISTORY: "SEARCH_HISTORY",
 };
 
-export const serverBaseURL = "https://cookron.onrender.com";
+export const serverBaseURL = "https://2d97-102-66-187-130.ngrok-free.app"; //"https://cookron.onrender.com";
 export const COLORS = {
   main: "#FEF7DC",
   primary: "#E6DDC6",

@@ -29,6 +29,7 @@ const Recipe: React.FunctionComponent<AppNavProps<"Recipe">> = ({
   const {
     dimension: { width },
   } = useMediaQuery();
+
   React.useEffect(() => {
     (async () => {
       const res = await retrieve(KEYS.BOOK_MARKS);

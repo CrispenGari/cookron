@@ -1,8 +1,6 @@
 import {
   View,
-  Text,
   Animated,
-  ScrollView,
   TouchableOpacity,
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -11,33 +9,28 @@ import {
 } from "react-native";
 import React from "react";
 import { Transition, Transitioning } from "react-native-reanimated";
-import { COLORS, logo, serverBaseURL } from "../../constants";
-import { styles } from "../../styles";
+import { COLORS, logo } from "../../constants";
 import { onImpact } from "../../utils";
 import { CategoriesBottomSheet } from "../BottomSheets";
 import Favorites from "../Favorites/Favorites";
-import Recipes from "../Recipes/Recipes";
+
 import TabNav from "../TabNav/TabNav";
-import RecipeSkeleton from "../skeletons/RecipeSkeleton/RecipeSkeleton";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AppParamList } from "../../params";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { RecipeType, ResponseType } from "../../types";
+
 import { useMediaQuery } from "../../hooks";
-import { useNetworkStore, useSettingsStore } from "../../store";
+
+import ExploreRecipes from "./ExploreRecipes";
+import Recommendations from "./Recommendations";
 
 const HomeRecipes: React.FunctionComponent<{
   navigation: StackNavigationProp<AppParamList, "Home">;
 }> = ({ navigation }) => {
-  const client = useQueryClient();
   const {
     dimension: { height, width },
   } = useMediaQuery();
   const navRef = React.useRef<any>();
-  const {
-    settings: { limit },
-  } = useSettingsStore();
-  const { network } = useNetworkStore();
+
   const zIndex = React.useRef(new Animated.Value(1)).current;
   const opacity = React.useRef(new Animated.Value(1)).current;
   const [state, setState] = React.useState({
@@ -50,45 +43,6 @@ const HomeRecipes: React.FunctionComponent<{
     onImpact();
     setState((state) => ({ ...state, selectedTab: index }));
   };
-
-  const [hasNextPage, setHasNextPage] = React.useState<boolean>(false);
-  const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
-  const { isLoading, fetchNextPage, isFetching } = useInfiniteQuery({
-    queryKey: ["recipes", limit],
-    queryFn: async ({ pageParam, queryKey }) => {
-      const [_, _limit] = queryKey;
-      const res = await fetch(
-        `${serverBaseURL}/api/recipes/recipes?lastId=${
-          pageParam ?? ""
-        }&limit=${_limit}`
-      );
-      const data = await res.json();
-      return data as ResponseType;
-    },
-    staleTime: Infinity,
-    getNextPageParam: ({ lastId }) => lastId,
-    keepPreviousData: true,
-    onSuccess: (data) => {
-      setHasNextPage(data.pages.at(-1)?.hasNext || false);
-      setRecipes(data.pages.flatMap((page) => page.recipes));
-    },
-  });
-
-  React.useEffect(() => {
-    let mounted: boolean = true;
-    if (mounted) {
-      (async () => {
-        setRecipes([]);
-        await client.invalidateQueries(["recipes", limit], {
-          exact: true,
-        });
-      })();
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [limit]);
-
   const onMomentumScrollBegin = (
     e: NativeSyntheticEvent<NativeScrollEvent>
   ) => {
@@ -190,59 +144,12 @@ const HomeRecipes: React.FunctionComponent<{
         </View>
       ) : (
         <View style={{ flex: 1 }}>
-          {(isFetching && recipes.length === 0) ||
-          !network.isInternetReachable ? (
-            <View style={{ flex: 1 }}>
-              <Text
-                style={[
-                  styles.p,
-                  {
-                    fontSize: 20,
-                    marginLeft: 10,
-                  },
-                ]}
-              >
-                RECIPES
-              </Text>
-              <ScrollView
-                scrollEventThrottle={16}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                  flexWrap: "wrap",
-                  paddingBottom: 100,
-                  paddingTop: 10,
-                }}
-                style={{ flex: 1 }}
-                onMomentumScrollBegin={onMomentumScrollBegin}
-                onMomentumScrollEnd={onMomentumScrollEnd}
-              >
-                {Array(15)
-                  .fill(null)
-                  .map((_, index) => (
-                    <RecipeSkeleton key={index} />
-                  ))}
-              </ScrollView>
-            </View>
-          ) : recipes.length ? (
-            <Recipes
-              onMomentumScrollEnd={onMomentumScrollEnd}
-              recipes={recipes}
-              onMomentumScrollBegin={onMomentumScrollBegin}
-              fetchNextPageData={async () => {
-                if (!isLoading && !isFetching && hasNextPage) {
-                  await fetchNextPage();
-                }
-              }}
-              isLoading={isFetching || isLoading}
-              navigation={navigation}
-            />
-          ) : (
-            <Text style={[styles.p, { padding: 20, textAlign: "center" }]}>
-              No Recipes.
-            </Text>
-          )}
+          <Recommendations navigation={navigation} />
+          <ExploreRecipes
+            navigation={navigation}
+            onMomentumScrollEnd={onMomentumScrollEnd}
+            onMomentumScrollBegin={onMomentumScrollBegin}
+          />
         </View>
       )}
     </View>

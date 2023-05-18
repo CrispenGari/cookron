@@ -18,11 +18,13 @@ interface Props {
   navigation: StackNavigationProp<AppParamList, "Home">;
   searchTerm: string;
   category: MainCategoryType;
+  toggle: () => void;
 }
 const CategoryFilteredRecipes: React.FunctionComponent<Props> = ({
   navigation,
   searchTerm,
   category,
+  toggle,
 }) => {
   const [hasNextPage, setHasNextPage] = React.useState<boolean>(false);
   const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
@@ -159,7 +161,12 @@ const CategoryFilteredRecipes: React.FunctionComponent<Props> = ({
       ) : null}
 
       {recipes.map((recipe) => (
-        <SearchResult key={recipe.id} recipe={recipe} navigation={navigation} />
+        <SearchResult
+          toggle={toggle}
+          key={recipe.id}
+          recipe={recipe}
+          navigation={navigation}
+        />
       ))}
 
       {isFetching && recipes.length === 0 ? (

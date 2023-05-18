@@ -28,7 +28,11 @@ def recipes():
         """
         _history = [x for x in data if x["id"] == lastInHistoryRecipeId]
         if _history:
-            ids = get_recommendations_from_description(_history[0]["name"], path)
+            ids = [
+                i
+                for i in get_recommendations_from_description(_history[0]["name"], path)
+                if i != lastInHistoryRecipeId
+            ]
             grouped_data = [
                 next(item for item in data if item["id"] == id) for id in ids
             ]

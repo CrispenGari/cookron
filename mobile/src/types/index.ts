@@ -12,7 +12,6 @@ export type SettingsType = {
 };
 
 export type RecipeType = {
-  _id: string;
   id: string;
   url: string;
   image: string;

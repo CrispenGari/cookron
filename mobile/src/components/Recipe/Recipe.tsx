@@ -12,15 +12,15 @@ import { AppParamList } from "../../params";
 
 interface Props {
   recipe: RecipeType;
-  index: number;
   navigation: StackNavigationProp<AppParamList, "Home" | "Favorites">;
   toggle?: () => void;
+  cardType: "recommentation" | "regular";
 }
 const Recipe: React.FunctionComponent<Props> = ({
   recipe,
-  index,
   navigation,
   toggle,
+  cardType,
 }) => {
   const {
     dimension: { width },
@@ -42,11 +42,19 @@ const Recipe: React.FunctionComponent<Props> = ({
         margin: 5,
         minWidth: width <= 600 ? 150 : 200,
         flex: 1,
-        maxWidth: width <= 600 ? 150 : 200,
+        maxWidth: cardType === "recommentation" ? 200 : 500,
       }}
     >
-      <Text style={[styles.h1, {}]}>{recipe.name}</Text>
-      <Text style={[styles.p, { fontSize: 14, color: "gray" }]}>
+      <Text
+        numberOfLines={cardType === "recommentation" ? 1 : 2}
+        style={[styles.h1, {}]}
+      >
+        {recipe.name}
+      </Text>
+      <Text
+        numberOfLines={cardType === "recommentation" ? 1 : 2}
+        style={[styles.p, { fontSize: 14, color: "gray" }]}
+      >
         {recipe.author} • {recipe.dish_type} • {recipe.difficult}
       </Text>
       <ContentLoader
@@ -69,9 +77,11 @@ const Recipe: React.FunctionComponent<Props> = ({
         }}
       />
       <Ratting value={recipe.rattings} max={5} />
-      <Text style={[styles.p]} numberOfLines={1}>
-        {recipe.description}
-      </Text>
+      {cardType === "regular" ? (
+        <Text style={[styles.p]} numberOfLines={1}>
+          {recipe.description}
+        </Text>
+      ) : null}
     </TouchableOpacity>
   );
 };

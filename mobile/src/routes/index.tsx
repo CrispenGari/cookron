@@ -2,13 +2,20 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { AppParamList } from "../params";
 import { Landing, Home, Settings, Favorites, Recipe } from "../screens";
-import { COLORS, FONTS } from "../constants";
+import { COLORS, FONTS, KEYS } from "../constants";
 import NetInfo from "@react-native-community/netinfo";
 import React from "react";
-import { useNetworkStore } from "../store";
+import {
+  useBookmarksStore,
+  useNetworkStore,
+  useSearchHistoryStore,
+} from "../store";
+import { retrieve } from "../utils";
 const Stack = createStackNavigator<AppParamList>();
 const Routes = () => {
   const { setNetwork } = useNetworkStore();
+  const { setBookmarks } = useBookmarksStore();
+  const { setSearchHistory } = useSearchHistoryStore();
   React.useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(
       ({ type, isInternetReachable, isConnected }) => {
@@ -17,6 +24,15 @@ const Routes = () => {
     );
     return () => unsubscribe();
   }, [setNetwork]);
+
+  React.useEffect(() => {
+    (async () => {
+      const bookmarks = await retrieve(KEYS.BOOK_MARKS);
+      const history = await retrieve(KEYS.SEARCH_HISTORY);
+      setSearchHistory(history ? JSON.parse(history) : []);
+      setBookmarks(bookmarks ? JSON.parse(bookmarks) : []);
+    })();
+  }, []);
   return (
     <NavigationContainer>
       <Stack.Navigator

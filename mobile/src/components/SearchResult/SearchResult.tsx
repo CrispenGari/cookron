@@ -4,11 +4,12 @@ import type { RecipeType } from "../../types";
 import { styles } from "../../styles";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import Ratting from "../Ratting/Ratting";
-import { onImpact } from "../../utils";
-import { COLORS } from "../../constants";
+import { onImpact, store } from "../../utils";
+import { COLORS, KEYS } from "../../constants";
 import ContentLoader from "../ContentLoader/ContentLoader";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AppParamList } from "../../params";
+import { useSearchHistoryStore } from "../../store";
 
 interface Props {
   recipe: RecipeType;
@@ -24,14 +25,19 @@ const SearchResult: React.FunctionComponent<Props> = ({
     dimension: { width },
   } = useMediaQuery();
   const [loaded, setLoaded] = React.useState<boolean>(false);
+  const { setSearchHistory, history } = useSearchHistoryStore();
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      onPress={() => {
+      onPress={async () => {
         onImpact();
         if (typeof toggle !== "undefined") {
           toggle();
         }
+        // add the recipe to the search history
+        const recipes = [recipe, ...history.filter((r) => r.id !== recipe.id)];
+        setSearchHistory(recipes);
+        await store(KEYS.SEARCH_HISTORY, JSON.stringify(recipes));
         navigation.navigate("Recipe", {
           recipe: JSON.stringify(recipe),
         });

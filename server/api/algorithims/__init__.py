@@ -31,10 +31,11 @@ def get_recommendations_from_description(name, filename):
     you probabbly want the simmilar recipes to that one.
     """
     dataframe = pd.read_json(filename)
+    dataframe.drop_duplicates(subset=["name"], inplace=True)
+    dataframe = dataframe.reset_index(drop=True)
     tfidf = TfidfVectorizer(stop_words="english")
     tfidf_matrix = tfidf.fit_transform(dataframe.description)
     cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
-    dataframe.drop_duplicates(subset=["name"], inplace=True)
     indices = pd.Series(dataframe.index, index=dataframe["name"])
     idx = indices[name]
     sim_scores = list(enumerate(cosine_sim[idx]))
@@ -69,13 +70,14 @@ def create_soup(x):
 
 def get_recommendations_from_meta_data(name, filename):
     dataframe = pd.read_json(filename)
+    dataframe.drop_duplicates(subset=["name"], inplace=True)
+    dataframe = dataframe.reset_index(drop=True)
     for feature in features:
         dataframe[feature] = dataframe[feature].apply(clean_data)
     dataframe["soup"] = dataframe.apply(create_soup, axis=1)
     count = CountVectorizer(stop_words="english")
     count_matrix = count.fit_transform(dataframe.soup)
     cosine_sim = cosine_similarity(count_matrix, count_matrix)
-    dataframe.drop_duplicates(subset=["name"], inplace=True)
     indices = pd.Series(dataframe.index, index=dataframe.name)
     idx = indices[name]
     sim_scores = list(enumerate(cosine_sim[idx]))
