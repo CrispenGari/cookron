@@ -24,7 +24,7 @@ The app UI looks as follows:
     <img width="200" src="images/6.jpeg" alt="demo"/>
 </p>
 
-> You can download the `apk` file for android of this app at [cookron](https://expo.dev/artifacts/eas/hUeRZyqdyEEUSSzLEsyxTB.apk).
+> You can download the `apk` file for android of this app at [cookron](https://expo.dev/artifacts/eas/s34AAejjmGHAywgbixSQgu.apk).
 
 ### How does `cookron` works?
 
