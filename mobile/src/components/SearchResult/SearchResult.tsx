@@ -9,7 +9,7 @@ import { COLORS, KEYS } from "../../constants";
 import ContentLoader from "../ContentLoader/ContentLoader";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AppParamList } from "../../params";
-import { useSearchHistoryStore } from "../../store";
+import { useSearchHistoryStore, useSettingsStore } from "../../store";
 
 interface Props {
   recipe: RecipeType;
@@ -24,13 +24,19 @@ const SearchResult: React.FunctionComponent<Props> = ({
   const {
     dimension: { width },
   } = useMediaQuery();
+  const {
+    settings: { haptics },
+  } = useSettingsStore();
   const [loaded, setLoaded] = React.useState<boolean>(false);
   const { setSearchHistory, history } = useSearchHistoryStore();
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={async () => {
-        onImpact();
+        if (haptics) {
+          onImpact();
+        }
+
         if (typeof toggle !== "undefined") {
           toggle();
         }

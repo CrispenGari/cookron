@@ -6,10 +6,14 @@ import { styles } from "../../../styles";
 import { onImpact } from "../../../utils";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AppParamList } from "../../../params";
+import { useSettingsStore } from "../../../store";
 export const CategoriesTopHeader: React.FunctionComponent<{
   navigation: StackNavigationProp<AppParamList, "Home">;
   toggle: () => void;
 }> = ({ navigation, toggle }) => {
+  const {
+    settings: { haptics },
+  } = useSettingsStore();
   return (
     <SafeAreaView
       style={{
@@ -29,7 +33,10 @@ export const CategoriesTopHeader: React.FunctionComponent<{
           style={{ alignItems: "center" }}
           activeOpacity={0.7}
           onPress={() => {
-            onImpact();
+            if (haptics) {
+              onImpact();
+            }
+
             toggle();
             navigation.navigate("Favorites");
           }}
@@ -47,7 +54,10 @@ export const CategoriesTopHeader: React.FunctionComponent<{
           style={{ alignItems: "center" }}
           activeOpacity={0.7}
           onPress={() => {
-            onImpact();
+            if (haptics) {
+              onImpact();
+            }
+
             toggle();
             navigation.navigate("Settings");
           }}

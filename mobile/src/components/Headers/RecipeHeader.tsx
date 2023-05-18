@@ -7,7 +7,7 @@ import { RecipeType } from "../../types";
 import { styles } from "../../styles";
 import { Ionicons, Feather, MaterialIcons } from "@expo/vector-icons";
 import { onImpact, playMusic, stopMusic } from "../../utils";
-import { useMusicStore } from "../../store";
+import { useMusicStore, useSettingsStore } from "../../store";
 const RecipeHeader: React.FunctionComponent<
   StackHeaderProps & {
     recipe: RecipeType;
@@ -17,6 +17,9 @@ const RecipeHeader: React.FunctionComponent<
     dimension: { width },
   } = useMediaQuery();
   const { music, setMusic } = useMusicStore();
+  const {
+    settings: { haptics },
+  } = useSettingsStore();
   return (
     <SafeAreaView
       style={{
@@ -36,7 +39,10 @@ const RecipeHeader: React.FunctionComponent<
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
-            onImpact();
+            if (haptics) {
+              onImpact();
+            }
+
             navigation.goBack();
           }}
           style={{ paddingHorizontal: 10 }}
@@ -50,7 +56,10 @@ const RecipeHeader: React.FunctionComponent<
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={async () => {
-            onImpact();
+            if (haptics) {
+              onImpact();
+            }
+
             if (music) {
               setMusic(false);
               await stopMusic();

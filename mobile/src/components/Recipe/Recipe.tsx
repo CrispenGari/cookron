@@ -9,6 +9,7 @@ import { COLORS } from "../../constants";
 import ContentLoader from "../ContentLoader/ContentLoader";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AppParamList } from "../../params";
+import { useSettingsStore } from "../../store";
 
 interface Props {
   recipe: RecipeType;
@@ -26,11 +27,17 @@ const Recipe: React.FunctionComponent<Props> = ({
     dimension: { width },
   } = useMediaQuery();
   const [loaded, setLoaded] = React.useState<boolean>(false);
+  const {
+    settings: { haptics },
+  } = useSettingsStore();
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={() => {
-        onImpact();
+        if (haptics) {
+          onImpact();
+        }
+
         if (typeof toggle !== "undefined") {
           toggle();
         }

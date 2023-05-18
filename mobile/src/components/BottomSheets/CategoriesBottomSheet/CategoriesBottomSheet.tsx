@@ -21,6 +21,7 @@ import { CategoriesTopHeader } from "./CategoriesTopHeader";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AppParamList } from "../../../params";
 import { CategoryRecipes } from "./CategoryRecipes";
+import { useSettingsStore } from "../../../store";
 interface Props {
   toggle: () => void;
   open: boolean;
@@ -31,6 +32,9 @@ const CreateEngineBottomSheet: React.FunctionComponent<Props> = ({
   open,
   navigation,
 }) => {
+  const {
+    settings: { haptics },
+  } = useSettingsStore();
   const navRef = React.useRef<any>();
   const zIndex = React.useRef(new Animated.Value(1)).current;
   const opacity = React.useRef(new Animated.Value(1)).current;
@@ -124,7 +128,10 @@ const CreateEngineBottomSheet: React.FunctionComponent<Props> = ({
           >
             <TouchableOpacity
               onPress={() => {
-                onImpact();
+                if (haptics) {
+                  onImpact();
+                }
+
                 toggle();
               }}
               style={[

@@ -6,7 +6,6 @@ import {
   NativeSyntheticEvent,
   Image,
   StyleSheet,
-  ScrollView,
 } from "react-native";
 import React from "react";
 import { Transition, Transitioning } from "react-native-reanimated";
@@ -23,6 +22,7 @@ import { useMediaQuery } from "../../hooks";
 
 import ExploreRecipes from "./ExploreRecipes";
 import Recommendations from "./Recommendations";
+import { useSettingsStore } from "../../store";
 
 const HomeRecipes: React.FunctionComponent<{
   navigation: StackNavigationProp<AppParamList, "Home">;
@@ -31,7 +31,9 @@ const HomeRecipes: React.FunctionComponent<{
     dimension: { height, width },
   } = useMediaQuery();
   const navRef = React.useRef<any>();
-
+  const {
+    settings: { haptics },
+  } = useSettingsStore();
   const zIndex = React.useRef(new Animated.Value(1)).current;
   const opacity = React.useRef(new Animated.Value(1)).current;
   const [state, setState] = React.useState({
@@ -41,7 +43,10 @@ const HomeRecipes: React.FunctionComponent<{
     if (navRef.current) {
       navRef.current.animateNextTransition();
     }
-    onImpact();
+    if (haptics) {
+      onImpact();
+    }
+
     setState((state) => ({ ...state, selectedTab: index }));
   };
   const onMomentumScrollBegin = (
@@ -117,7 +122,10 @@ const HomeRecipes: React.FunctionComponent<{
       >
         <TouchableOpacity
           onPress={() => {
-            onImpact();
+            if (haptics) {
+              onImpact();
+            }
+
             toggleOpenCategories();
           }}
           style={[

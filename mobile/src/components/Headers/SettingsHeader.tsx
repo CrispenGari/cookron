@@ -7,10 +7,13 @@ import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { StackHeaderProps } from "@react-navigation/stack";
 import { onImpact } from "../../utils";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useSettingsStore } from "../../store";
 const SettingsHeader: React.FunctionComponent<StackHeaderProps> = ({
   navigation,
 }) => {
-  const [focused, setFocused] = React.useState<boolean>(false);
+  const {
+    settings: { haptics },
+  } = useSettingsStore();
   const {
     dimension: { width },
   } = useMediaQuery();
@@ -28,7 +31,10 @@ const SettingsHeader: React.FunctionComponent<StackHeaderProps> = ({
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={() => {
-          onImpact();
+          if (haptics) {
+            onImpact();
+          }
+
           navigation.goBack();
         }}
         style={{ paddingHorizontal: 10 }}
@@ -42,7 +48,10 @@ const SettingsHeader: React.FunctionComponent<StackHeaderProps> = ({
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={async () => {
-          onImpact();
+          if (haptics) {
+            onImpact();
+          }
+
           navigation.navigate("Favorites");
         }}
         style={{ paddingHorizontal: 10 }}

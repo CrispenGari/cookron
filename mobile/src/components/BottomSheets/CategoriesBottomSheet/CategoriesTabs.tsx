@@ -5,12 +5,16 @@ import { CategoriesTab } from "./CategoriesTab";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { MainCategoryType } from "../../../types";
 import { onImpact } from "../../../utils";
+import { useSettingsStore } from "../../../store";
 const TAB_BAR_HEIGHT: number = 40;
 const TAB_BAR_WIDTH: number = 300;
 export const CategoriesTabs: React.FunctionComponent<{
   setTab: React.Dispatch<React.SetStateAction<MainCategoryType>>;
   tab: MainCategoryType;
 }> = ({ setTab, tab }) => {
+  const {
+    settings: { haptics },
+  } = useSettingsStore();
   return (
     <View
       style={{
@@ -38,7 +42,10 @@ export const CategoriesTabs: React.FunctionComponent<{
         style={{ flex: 1 }}
         activeOpacity={0.7}
         onPress={() => {
-          onImpact();
+          if (haptics) {
+            onImpact();
+          }
+
           setTab("recipes");
         }}
       >
@@ -58,7 +65,10 @@ export const CategoriesTabs: React.FunctionComponent<{
         style={{ flex: 1 }}
         activeOpacity={0.7}
         onPress={() => {
-          onImpact();
+          if (haptics) {
+            onImpact();
+          }
+
           setTab("baking");
         }}
       >
@@ -78,7 +88,10 @@ export const CategoriesTabs: React.FunctionComponent<{
         style={{ flex: 1 }}
         activeOpacity={0.7}
         onPress={() => {
-          onImpact();
+          if (haptics) {
+            onImpact();
+          }
+
           setTab("budget");
         }}
       >
@@ -98,7 +111,10 @@ export const CategoriesTabs: React.FunctionComponent<{
         style={{ flex: 1 }}
         activeOpacity={0.7}
         onPress={() => {
-          onImpact();
+          if (haptics) {
+            onImpact();
+          }
+
           setTab("health");
         }}
       >
@@ -118,7 +134,10 @@ export const CategoriesTabs: React.FunctionComponent<{
         style={{ flex: 1 }}
         activeOpacity={0.7}
         onPress={() => {
-          onImpact();
+          if (haptics) {
+            onImpact();
+          }
+
           setTab("inspiration");
         }}
       >

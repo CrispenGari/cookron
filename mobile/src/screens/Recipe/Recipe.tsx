@@ -19,7 +19,7 @@ import { styles } from "../../styles";
 import ContentLoader from "../../components/ContentLoader/ContentLoader";
 import { MaterialIcons } from "@expo/vector-icons";
 import { onImpact, store } from "../../utils";
-import { useBookmarksStore } from "../../store";
+import { useBookmarksStore, useSettingsStore } from "../../store";
 const Recipe: React.FunctionComponent<AppNavProps<"Recipe">> = ({
   navigation,
   route,
@@ -30,6 +30,9 @@ const Recipe: React.FunctionComponent<AppNavProps<"Recipe">> = ({
   const {
     dimension: { width },
   } = useMediaQuery();
+  const {
+    settings: { haptics },
+  } = useSettingsStore();
   const { bookmarks, setBookmarks } = useBookmarksStore();
   React.useEffect(() => {
     (async () => {
@@ -92,7 +95,10 @@ const Recipe: React.FunctionComponent<AppNavProps<"Recipe">> = ({
             right: 20,
           }}
           onPress={async () => {
-            onImpact();
+            if (haptics) {
+              onImpact();
+            }
+
             await handleReaction();
           }}
         >

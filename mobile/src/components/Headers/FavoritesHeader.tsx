@@ -6,12 +6,17 @@ import { StackHeaderProps } from "@react-navigation/stack";
 import { styles } from "../../styles";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { onImpact } from "../../utils";
+import { useSettingsStore } from "../../store";
 const FavoritesHeader: React.FunctionComponent<StackHeaderProps> = ({
   navigation,
 }) => {
   const {
     dimension: { width },
   } = useMediaQuery();
+
+  const {
+    settings: { haptics },
+  } = useSettingsStore();
   return (
     <SafeAreaView
       style={{
@@ -31,7 +36,10 @@ const FavoritesHeader: React.FunctionComponent<StackHeaderProps> = ({
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
-            onImpact();
+            if (haptics) {
+              onImpact();
+            }
+
             navigation.goBack();
           }}
           style={{ paddingHorizontal: 10 }}
@@ -45,8 +53,11 @@ const FavoritesHeader: React.FunctionComponent<StackHeaderProps> = ({
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={async () => {
-            onImpact();
-            navigation.navigate('Settings')
+            if (haptics) {
+              onImpact();
+            }
+
+            navigation.navigate("Settings");
           }}
           style={{ paddingHorizontal: 10 }}
         >
