@@ -15,6 +15,7 @@ export const CategoriesTabs: React.FunctionComponent<{
   const {
     settings: { haptics },
   } = useSettingsStore();
+
   return (
     <View
       style={{
@@ -22,11 +23,12 @@ export const CategoriesTabs: React.FunctionComponent<{
         marginTop: 25,
         backgroundColor: COLORS.primary,
         borderRadius: 999,
-        width: 300,
+        width: TAB_BAR_WIDTH,
         alignSelf: "center",
         paddingHorizontal: 10,
         overflow: "hidden",
         paddingVertical: 2,
+        height: TAB_BAR_HEIGHT,
       }}
     >
       <ActiveTabIndicator

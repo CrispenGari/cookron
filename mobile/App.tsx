@@ -6,11 +6,13 @@ import * as Font from "expo-font";
 import { FONTS, Fonts } from "./src/constants";
 import Routes from "./src/routes";
 import ReactQueryProvider from "./src/providers/ReactQueryProvider";
+import { usePlatform } from "./src/hooks";
 LogBox.ignoreLogs;
 LogBox.ignoreAllLogs();
 SplashScreen.preventAutoHideAsync();
 const App = () => {
   const [ready, setReady] = React.useState<boolean>(false);
+  const { os } = usePlatform();
   React.useLayoutEffect(() => {
     (async () => {
       await Font.loadAsync(Fonts);
@@ -28,7 +30,9 @@ const App = () => {
   if (!ready) return null;
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar
+        barStyle={os === "android" ? "light-content" : "dark-content"}
+      />
       <ReactQueryProvider>
         <Routes />
       </ReactQueryProvider>

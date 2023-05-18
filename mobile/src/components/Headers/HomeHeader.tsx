@@ -38,19 +38,24 @@ const HomeHeader: React.FunctionComponent<Props> = ({
         paddingHorizontal: 10,
       }}
     >
-      <Text
-        style={[
-          styles.h1,
-          {
-            fontSize: 25,
-            letterSpacing: 1,
-            marginHorizontal: 10,
-            marginBottom: width > 600 ? 0 : 10,
-          },
-        ]}
+      <TouchableOpacity
+        onPress={() => setOpenSearch(false)}
+        activeOpacity={0.7}
       >
-        cookron
-      </Text>
+        <Text
+          style={[
+            styles.h1,
+            {
+              fontSize: 25,
+              letterSpacing: 1,
+              marginHorizontal: 10,
+              marginBottom: width > 600 ? 0 : 10,
+            },
+          ]}
+        >
+          cookron
+        </Text>
+      </TouchableOpacity>
       <Animatable.View
         animation="slideInRight"
         duration={500}

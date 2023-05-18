@@ -24,7 +24,7 @@ The app UI looks as follows:
     <img width="200" src="images/6.jpeg" alt="demo"/>
 </p>
 
-> You can download the `apk` file for android of this app at [cookron](https://expo.dev/accounts/crispen_dev/projects/cookron/builds/32f506e5-d214-4015-86df-85fa2a0b3dca).
+> You can download the `apk` file for android of this app at [cookron](https://expo.dev/artifacts/eas/hUeRZyqdyEEUSSzLEsyxTB.apk).
 
 ### How does `cookron` works?
 
@@ -94,7 +94,7 @@ The app UI looks as follows:
 
 In this project I'm using the `MIT` license which reads as follows:
 
-```json
+```
 MIT License
 
 Copyright (c) 2023 crispengari
