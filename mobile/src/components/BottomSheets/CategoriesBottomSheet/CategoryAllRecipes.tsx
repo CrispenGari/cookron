@@ -30,19 +30,19 @@ const CategoryAllRecipes: React.FunctionComponent<{
   toggle,
   navigation,
 }) => {
-  const [hasNextPage, setHasNextPage] = React.useState<boolean>(false);
-  const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
   const {
     settings: { limit },
   } = useSettingsStore();
   const { network } = useNetworkStore();
   const client = useQueryClient();
+  const [hasNextPage, setHasNextPage] = React.useState<boolean>(false);
+  const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
   const { isLoading, fetchNextPage, isFetching } = useInfiniteQuery({
-    queryKey: ["recipes", category, limit],
+    queryKey: ["recipes", limit, category],
     queryFn: async ({ pageParam, queryKey }) => {
-      const [_, cate, _limit] = queryKey;
+      const [_, _limit, _cate] = queryKey;
       const res = await fetch(
-        `${serverBaseURL}/api/recipes/${cate}?lastId=${
+        `${serverBaseURL}/api/recipes/${_cate}?lastId=${
           pageParam ?? ""
         }&limit=${_limit}`
       );
@@ -60,10 +60,10 @@ const CategoryAllRecipes: React.FunctionComponent<{
 
   React.useEffect(() => {
     let mounted: boolean = true;
-    if (mounted && !!category) {
+    if (mounted) {
       (async () => {
         setRecipes([]);
-        await client.invalidateQueries(["recipes", category, limit], {
+        await client.invalidateQueries(["recipes", limit, category], {
           exact: true,
         });
       })();
@@ -71,7 +71,8 @@ const CategoryAllRecipes: React.FunctionComponent<{
     return () => {
       mounted = false;
     };
-  }, [category, limit]);
+  }, [limit, category]);
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -91,12 +92,14 @@ const CategoryAllRecipes: React.FunctionComponent<{
           (
             nativeEvent.contentOffset.y + nativeEvent.layoutMeasurement.height
           ).toFixed(0) === nativeEvent.contentSize.height.toFixed(0);
-        if (isAtEnd && hasNextPage) {
+        if (isAtEnd && hasNextPage && !isFetching) {
           await fetchNextPage();
         }
       }}
     >
-      {isLoading || !network.isInternetReachable ? (
+      {isLoading ||
+      !network.isInternetReachable ||
+      (isFetching && recipes.length === 0) ? (
         Array(21)
           .fill(null)
           .map((_, index) => <RecipeSkeleton key={index} />)
@@ -109,9 +112,9 @@ const CategoryAllRecipes: React.FunctionComponent<{
           <Recipe
             navigation={navigation}
             recipe={recipe}
-            index={0}
             key={recipe.id}
             toggle={toggle}
+            cardType="regular"
           />
         ))
       )}

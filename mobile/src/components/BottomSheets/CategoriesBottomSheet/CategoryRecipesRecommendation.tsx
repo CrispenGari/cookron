@@ -1,22 +1,24 @@
 import { View, Text, FlatList } from "react-native";
 import React from "react";
-import { COLORS, FONTS, serverBaseURL } from "../../constants";
-import RecipeSkeleton from "../skeletons/RecipeSkeleton/RecipeSkeleton";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { AppParamList } from "../../../params";
+import { MainCategoryType, RecipeType, ResponseType } from "../../../types";
 import { useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
-import { RecipeType, ResponseType } from "../../types";
+import { serverBaseURL, FONTS, COLORS } from "../../../constants";
 import {
   useBookmarksStore,
-  useNetworkStore,
   useSettingsStore,
-} from "../../store";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { AppParamList } from "../../params";
-import Recipe from "../Recipe/Recipe";
-import RippleLoadingIndicator from "../RippleLoadingIndicator/RippleLoadingIndicator";
+  useNetworkStore,
+} from "../../../store";
+import Recipe from "../../Recipe/Recipe";
+import RecipeSkeleton from "../../skeletons/RecipeSkeleton/RecipeSkeleton";
+import RippleLoadingIndicator from "../../RippleLoadingIndicator/RippleLoadingIndicator";
 
-const Recommendations: React.FunctionComponent<{
+const CategoryRecipesRecommendation: React.FunctionComponent<{
+  category: MainCategoryType;
+  toggle: () => void;
   navigation: StackNavigationProp<AppParamList, "Home">;
-}> = ({ navigation }) => {
+}> = ({ navigation, category, toggle }) => {
   const [historyProductId, setHistoryProductId] = React.useState("");
   const { bookmarks } = useBookmarksStore();
   const {
@@ -27,11 +29,11 @@ const Recommendations: React.FunctionComponent<{
   const [hasNextPage, setHasNextPage] = React.useState<boolean>(false);
   const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
   const { isLoading, fetchNextPage, isFetching } = useInfiniteQuery({
-    queryKey: ["recipes", limit, historyProductId],
+    queryKey: ["recipes", limit, historyProductId, category],
     queryFn: async ({ pageParam, queryKey }) => {
-      const [_, _limit, lastInHistoryRecipeId] = queryKey;
+      const [_, _limit, lastInHistoryRecipeId, _cate] = queryKey;
       const res = await fetch(
-        `${serverBaseURL}/api/recipes/recipes?lastId=${
+        `${serverBaseURL}/api/recipes/${_cate}?lastId=${
           pageParam ?? ""
         }&limit=${_limit}&lastInHistoryRecipeId=${lastInHistoryRecipeId}`
       );
@@ -52,27 +54,36 @@ const Recommendations: React.FunctionComponent<{
     if (mounted) {
       (async () => {
         setRecipes([]);
-        await client.invalidateQueries(["recipes", limit, historyProductId], {
-          exact: true,
-        });
+        await client.invalidateQueries(
+          ["recipes", limit, historyProductId, category],
+          {
+            exact: true,
+          }
+        );
       })();
     }
     return () => {
       mounted = false;
     };
-  }, [limit, historyProductId]);
+  }, [limit, historyProductId, category]);
 
   React.useEffect(() => {
-    const categoryHistory = bookmarks.find((r) => r.maincategory === "recipes");
+    const categoryHistory = bookmarks.find((r) => r.maincategory === category);
     if (categoryHistory?.id) {
       setHistoryProductId(categoryHistory.id);
     }
-  }, [bookmarks]);
+  }, [category, bookmarks]);
 
   return (
     <View style={{ padding: 10 }}>
-      <Text style={{ fontFamily: FONTS.regularBold, marginBottom: 5 }}>
-        RECOMMENDED RECIPES FOR YOU
+      <Text
+        style={{
+          textTransform: "uppercase",
+          fontFamily: FONTS.regularBold,
+          marginBottom: 5,
+        }}
+      >
+        RECOMMENDED STUFF UNDER {category}
       </Text>
       {!network.isInternetReachable ||
       isLoading ||
@@ -117,11 +128,12 @@ const Recommendations: React.FunctionComponent<{
             flexDirection: "row",
           }}
           keyExtractor={({ id }) => id}
-          renderItem={({ index, item: recipe }) => (
+          renderItem={({ item: recipe }) => (
             <Recipe
               cardType="recommentation"
               navigation={navigation}
               recipe={recipe}
+              toggle={toggle}
             />
           )}
           horizontal
@@ -133,4 +145,4 @@ const Recommendations: React.FunctionComponent<{
   );
 };
 
-export default Recommendations;
+export default CategoryRecipesRecommendation;

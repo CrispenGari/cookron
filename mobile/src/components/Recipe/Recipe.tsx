@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, Image, View } from "react-native";
-import React from "react";
+import React, { memo } from "react";
 import type { RecipeType } from "../../types";
 import { styles } from "../../styles";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
@@ -86,4 +86,4 @@ const Recipe: React.FunctionComponent<Props> = ({
   );
 };
 
-export default Recipe;
+export default memo(Recipe);

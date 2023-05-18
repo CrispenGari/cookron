@@ -6,6 +6,7 @@ import {
   NativeSyntheticEvent,
   Image,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import React from "react";
 import { Transition, Transitioning } from "react-native-reanimated";

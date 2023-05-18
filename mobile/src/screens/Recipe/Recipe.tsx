@@ -18,7 +18,8 @@ import Ratting from "../../components/Ratting/Ratting";
 import { styles } from "../../styles";
 import ContentLoader from "../../components/ContentLoader/ContentLoader";
 import { MaterialIcons } from "@expo/vector-icons";
-import { onImpact, retrieve, store } from "../../utils";
+import { onImpact, store } from "../../utils";
+import { useBookmarksStore } from "../../store";
 const Recipe: React.FunctionComponent<AppNavProps<"Recipe">> = ({
   navigation,
   route,
@@ -29,15 +30,13 @@ const Recipe: React.FunctionComponent<AppNavProps<"Recipe">> = ({
   const {
     dimension: { width },
   } = useMediaQuery();
-
+  const { bookmarks, setBookmarks } = useBookmarksStore();
   React.useEffect(() => {
     (async () => {
-      const res = await retrieve(KEYS.BOOK_MARKS);
-      const data: Array<RecipeType> = res ? JSON.parse(res) : [];
-      const _p = data.find(({ id }) => recipe.id === id);
+      const _p = bookmarks.find(({ id }) => recipe.id === id);
       setLiked(!!_p);
     })();
-  }, [recipe]);
+  }, [recipe, bookmarks]);
   React.useLayoutEffect(() => {
     navigation.setOptions({
       header: (props) => <RecipeHeader {...props} recipe={recipe} />,
@@ -46,15 +45,13 @@ const Recipe: React.FunctionComponent<AppNavProps<"Recipe">> = ({
 
   const handleReaction = async () => {
     if (liked) {
-      const res = await retrieve(KEYS.BOOK_MARKS);
-      const data: Array<RecipeType> = res ? JSON.parse(res) : [];
-      const payload = data.filter(({ id }) => id !== recipe.id);
+      const payload = bookmarks.filter(({ id }) => id !== recipe.id);
       setLiked(false);
+      setBookmarks(payload);
       await store(KEYS.BOOK_MARKS, JSON.stringify(payload));
     } else {
-      const res = await retrieve(KEYS.BOOK_MARKS);
-      const data = res ? JSON.parse(res) : [];
-      const payload = [recipe, ...data];
+      const payload = [recipe, ...bookmarks.filter((b) => b.id !== recipe.id)];
+      setBookmarks(payload);
       setLiked(true);
       await store(KEYS.BOOK_MARKS, JSON.stringify(payload));
     }

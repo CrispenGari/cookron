@@ -5,11 +5,12 @@ import { View, Keyboard, TouchableOpacity, TextInput } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { AppParamList } from "../../../params";
 import { MainCategoryType } from "../../../types";
-import CategoryAllRecipes from "./CategoryAllRecipes";
 import { COLORS, FONTS } from "../../../constants";
 import { useDebounce, useMediaQuery } from "../../../hooks";
 import { Ionicons } from "@expo/vector-icons";
 import CategoryFilteredRecipes from "./CategoryFilteredRecipes";
+import CategoryRecipesRecommendation from "./CategoryRecipesRecommendation";
+import CategoryRecipesExplore from "./CategoryRecipesExplore";
 export const CategoryRecipes: React.FunctionComponent<{
   category: MainCategoryType;
   toggle: () => void;
@@ -90,7 +91,10 @@ export const CategoryRecipes: React.FunctionComponent<{
       {openSearch ? (
         <CategoryFilteredRecipes {...props} searchTerm={searchTerm} />
       ) : (
-        <CategoryAllRecipes {...props} />
+        <View style={{ flex: 1 }}>
+          <CategoryRecipesRecommendation {...props} />
+          <CategoryRecipesExplore {...props} />
+        </View>
       )}
     </View>
   );
