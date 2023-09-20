@@ -2,6 +2,28 @@
 
 Building mobile app:
 
+First you need to install `eas-cli` by running the following command:
+
+```shell
+npm install --global eas-cli
+```
+
+After that you need to login using the command:
+
+```shell
+eas login
+```
+
+> When you are loging in you use your [`expo.dev`]https://expo.dev/eas() credentials.
+
+You can check if you are logged in or not using the command:
+
+```shell
+eas whoami
+```
+
+Then you can configure the build as follows
+
 ```shell
 eas build:configure
 ```
@@ -46,3 +68,7 @@ Building for ios:
 ```shell
 expo build ios
 ```
+
+### Refs
+
+1. [expo.dev](https://expo.dev/eas)
