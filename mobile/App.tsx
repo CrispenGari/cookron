@@ -1,18 +1,17 @@
 import "react-native-gesture-handler";
 import React from "react";
-import { View, StatusBar, LogBox } from "react-native";
+import { View, LogBox } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { Fonts } from "./src/constants";
 import Routes from "./src/routes";
 import ReactQueryProvider from "./src/providers/ReactQueryProvider";
-import { usePlatform } from "./src/hooks";
+import { StatusBar } from "expo-status-bar";
 LogBox.ignoreLogs;
 LogBox.ignoreAllLogs();
 SplashScreen.preventAutoHideAsync();
 const App = () => {
   const [ready, setReady] = React.useState<boolean>(false);
-  const { os } = usePlatform();
   React.useLayoutEffect(() => {
     (async () => {
       await Font.loadAsync(Fonts);
@@ -30,7 +29,12 @@ const App = () => {
   if (!ready) return null;
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <StatusBar barStyle={"default"} />
+      <StatusBar
+        style="dark"
+        translucent={true}
+        networkActivityIndicatorVisible={true}
+        animated={true}
+      />
       <ReactQueryProvider>
         <Routes />
       </ReactQueryProvider>
