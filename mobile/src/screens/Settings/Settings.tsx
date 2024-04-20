@@ -219,7 +219,7 @@ const Settings: React.FunctionComponent<AppNavProps<"Settings">> = ({
             textDecorationLine: "underline",
           }}
         >
-          1.0.2
+          1.0.3
         </Text>
       </SafeAreaView>
     </View>
