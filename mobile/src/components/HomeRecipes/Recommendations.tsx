@@ -117,7 +117,7 @@ const Recommendations: React.FunctionComponent<{
             flexDirection: "row",
           }}
           keyExtractor={({ id }) => id}
-          renderItem={({ index, item: recipe }) => (
+          renderItem={({ item: recipe }) => (
             <Recipe
               cardType="recommentation"
               navigation={navigation}

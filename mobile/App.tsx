@@ -30,9 +30,7 @@ const App = () => {
   if (!ready) return null;
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <StatusBar
-        barStyle={os === "android" ? "light-content" : "dark-content"}
-      />
+      <StatusBar barStyle={"default"} />
       <ReactQueryProvider>
         <Routes />
       </ReactQueryProvider>

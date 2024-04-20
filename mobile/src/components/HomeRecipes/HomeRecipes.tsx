@@ -121,6 +121,9 @@ const HomeRecipes: React.FunctionComponent<{
             {
               top: height * 0.72,
               left: width / 2 - 30,
+              elevation: 2,
+              shadowOpacity: 1,
+              shadowRadius: 2,
             },
           ]}
           activeOpacity={0.7}
@@ -143,9 +146,9 @@ const HomeRecipes: React.FunctionComponent<{
         <View style={{ flex: 1 }}>
           <Recommendations navigation={navigation} />
           <ExploreRecipes
-            navigation={navigation}
             onMomentumScrollEnd={onMomentumScrollEnd}
             onMomentumScrollBegin={onMomentumScrollBegin}
+            navigation={navigation}
           />
         </View>
       )}

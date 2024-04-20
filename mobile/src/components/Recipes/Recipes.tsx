@@ -54,7 +54,7 @@ const Recipes: React.FunctionComponent<Props> = ({
         }
       }}
     >
-      {recipes.map((recipe, index) => (
+      {recipes.map((recipe) => (
         <Recipe
           cardType="regular"
           recipe={recipe}

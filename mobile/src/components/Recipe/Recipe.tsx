@@ -10,6 +10,7 @@ import ContentLoader from "../ContentLoader/ContentLoader";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AppParamList } from "../../params";
 import { useSettingsStore } from "../../store";
+import { LazyImage } from "./LazyImage";
 
 interface Props {
   recipe: RecipeType;
@@ -26,11 +27,11 @@ const Recipe: React.FunctionComponent<Props> = ({
   const {
     dimension: { width },
   } = useMediaQuery();
-
   const [loaded, setLoaded] = React.useState<boolean>(true);
   const {
     settings: { haptics },
   } = useSettingsStore();
+
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -38,7 +39,6 @@ const Recipe: React.FunctionComponent<Props> = ({
         if (haptics) {
           onImpact();
         }
-
         if (typeof toggle !== "undefined") {
           toggle();
         }
@@ -65,26 +65,7 @@ const Recipe: React.FunctionComponent<Props> = ({
       >
         {recipe.author} • {recipe.dish_type} • {recipe.difficult}
       </Text>
-      <ContentLoader
-        style={{
-          height: 100,
-          borderRadius: 5,
-          backgroundColor: COLORS.secondary,
-          marginBottom: 2,
-          display: !loaded ? "flex" : "none",
-        }}
-      />
-      <Image
-        source={{
-          uri: recipe.image,
-        }}
-        onLoad={() => setLoaded(true)}
-        style={{
-          width: "100%",
-          display: loaded ? "flex" : "none",
-          height: 100,
-        }}
-      />
+      <LazyImage uri={recipe.image} />
       <Ratting value={recipe.rattings} max={5} />
       {cardType === "regular" ? (
         <Text style={[styles.p]} numberOfLines={1}>

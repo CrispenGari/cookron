@@ -89,7 +89,7 @@ const ExploreRecipes: React.FunctionComponent<{
         >
           {Array(limit)
             .fill(null)
-            .map((e, i) => (
+            .map((_e, i) => (
               <RecipeSkeleton key={i} />
             ))}
         </ScrollView>
