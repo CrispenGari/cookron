@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "cookron"
@@ -28,7 +30,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "b17327e7-16bd-4a4a-839c-da751c7c580e"
+        "projectId": "264f85ed-9612-4afc-bf14-91456e45f40d"
       }
     }
   }

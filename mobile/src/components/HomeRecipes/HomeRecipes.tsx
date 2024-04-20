@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from "react-native";
 import React from "react";
-import { Transition, Transitioning } from "react-native-reanimated";
+
 import { COLORS, logo } from "../../constants";
 import { onImpact } from "../../utils";
 import { CategoriesBottomSheet } from "../BottomSheets";
@@ -50,7 +50,7 @@ const HomeRecipes: React.FunctionComponent<{
     setState((state) => ({ ...state, selectedTab: index }));
   };
   const onMomentumScrollBegin = (
-    e: NativeSyntheticEvent<NativeScrollEvent>
+    _e: NativeSyntheticEvent<NativeScrollEvent>
   ) => {
     Animated.sequence([
       Animated.timing(zIndex, {
@@ -65,7 +65,7 @@ const HomeRecipes: React.FunctionComponent<{
       }),
     ]).start();
   };
-  const onMomentumScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const onMomentumScrollEnd = (_e: NativeSyntheticEvent<NativeScrollEvent>) => {
     Animated.sequence([
       Animated.timing(zIndex, {
         duration: 300,
@@ -84,18 +84,6 @@ const HomeRecipes: React.FunctionComponent<{
       navRef.current.animateNextTransition();
     }
   }, []);
-  const navTransition = (
-    <Transition.Together>
-      <Transition.In
-        type="slide-right"
-        durationMs={1000}
-        interpolation="easeInOut"
-      />
-      <Transition.In type="fade" durationMs={1000} />
-      <Transition.Change />
-      <Transition.Out type="fade" durationMs={1000} />
-    </Transition.Together>
-  );
 
   const [openCategories, setOpenCategories] = React.useState<boolean>(false);
   const toggleOpenCategories = () => setOpenCategories((state) => !state);
@@ -140,9 +128,9 @@ const HomeRecipes: React.FunctionComponent<{
           <Image source={logo} style={style.img} />
         </TouchableOpacity>
       </Animated.View>
-      <Transitioning.View transition={navTransition} ref={navRef}>
+      <View>
         <TabNav state={state} selectTab={selectTab} setState={setState} />
-      </Transitioning.View>
+      </View>
       {state.selectedTab === 1 ? (
         <View style={{ flex: 1 }}>
           <Favorites

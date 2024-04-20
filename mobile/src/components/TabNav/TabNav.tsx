@@ -26,7 +26,7 @@ const TabNav: React.FunctionComponent<Props> = ({ state, selectTab }) => {
         height: TAB_BAR_HEIGHT,
         width: TAB_BAR_WIDTH,
         marginHorizontal: 15,
-        backgroundColor: COLORS.tertiary,
+        backgroundColor: COLORS.primary,
         overflow: "hidden",
         borderRadius: 40,
         alignSelf: "center",
@@ -39,7 +39,7 @@ const TabNav: React.FunctionComponent<Props> = ({ state, selectTab }) => {
               position: "absolute",
               height: TAB_BAR_HEIGHT,
               width: TAB_BAR_WIDTH / 2,
-              backgroundColor: COLORS.primary,
+              backgroundColor: COLORS.tertiary,
               left: 0,
             },
           ]}
@@ -51,7 +51,7 @@ const TabNav: React.FunctionComponent<Props> = ({ state, selectTab }) => {
               position: "absolute",
               height: TAB_BAR_HEIGHT,
               width: TAB_BAR_WIDTH / 2,
-              backgroundColor: COLORS.primary,
+              backgroundColor: COLORS.tertiary,
               right: 0,
             },
           ]}
@@ -61,9 +61,9 @@ const TabNav: React.FunctionComponent<Props> = ({ state, selectTab }) => {
         <Tab
           Icon={
             <Ionicons
-              name="md-fast-food-outline"
+              name="fast-food-outline"
               size={24}
-              color={state.selectedTab !== 0 ? "white" : "black"}
+              color={state.selectedTab === 0 ? "white" : "black"}
             />
           }
         />
@@ -74,7 +74,7 @@ const TabNav: React.FunctionComponent<Props> = ({ state, selectTab }) => {
             <MaterialIcons
               name="favorite-border"
               size={24}
-              color={state.selectedTab !== 1 ? "white" : "black"}
+              color={state.selectedTab === 1 ? "white" : "black"}
             />
           }
         />

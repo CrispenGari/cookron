@@ -138,7 +138,7 @@ const Settings: React.FunctionComponent<AppNavProps<"Settings">> = ({
         disabled={bookmarks.length === 0}
         Icon={
           <Ionicons
-            name="md-heart-dislike-outline"
+            name="heart-dislike-outline"
             size={24}
             color={COLORS.secondary}
           />

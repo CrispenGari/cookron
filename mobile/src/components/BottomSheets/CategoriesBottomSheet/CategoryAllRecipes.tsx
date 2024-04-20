@@ -39,6 +39,7 @@ const CategoryAllRecipes: React.FunctionComponent<{
   const [recipes, setRecipes] = React.useState<RecipeType[]>([]);
   const { isLoading, fetchNextPage, isFetching } = useInfiniteQuery({
     queryKey: ["recipes", limit, category],
+
     queryFn: async ({ pageParam, queryKey }) => {
       const [_, _limit, _cate] = queryKey;
       const res = await fetch(

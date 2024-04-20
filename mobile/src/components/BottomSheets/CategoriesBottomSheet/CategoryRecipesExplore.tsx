@@ -3,21 +3,13 @@ import {
   Text,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  ScrollView,
 } from "react-native";
 import React from "react";
 import CategoryAllRecipes from "./CategoryAllRecipes";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AppParamList } from "../../../params";
-import { MainCategoryType, RecipeType, ResponseType } from "../../../types";
-import { useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
-import { FONTS, serverBaseURL } from "../../../constants";
-import {
-  useBookmarksStore,
-  useSettingsStore,
-  useNetworkStore,
-} from "../../../store";
-import RecipeSkeleton from "../../skeletons/RecipeSkeleton/RecipeSkeleton";
+import { MainCategoryType } from "../../../types";
+import { FONTS } from "../../../constants";
 
 const CategoryRecipesExplore: React.FunctionComponent<{
   category: MainCategoryType;

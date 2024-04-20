@@ -56,7 +56,7 @@ export const CategoriesTabs: React.FunctionComponent<{
           title="recipes"
           Icon={
             <Ionicons
-              name="md-fast-food-outline"
+              name="fast-food-outline"
               size={16}
               color={tab === "recipes" ? "white" : "black"}
             />

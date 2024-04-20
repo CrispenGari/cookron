@@ -26,7 +26,8 @@ const Recipe: React.FunctionComponent<Props> = ({
   const {
     dimension: { width },
   } = useMediaQuery();
-  const [loaded, setLoaded] = React.useState<boolean>(false);
+
+  const [loaded, setLoaded] = React.useState<boolean>(true);
   const {
     settings: { haptics },
   } = useSettingsStore();
@@ -80,7 +81,8 @@ const Recipe: React.FunctionComponent<Props> = ({
         onLoad={() => setLoaded(true)}
         style={{
           width: "100%",
-          height: loaded ? 100 : 1,
+          display: loaded ? "flex" : "none",
+          height: 100,
         }}
       />
       <Ratting value={recipe.rattings} max={5} />

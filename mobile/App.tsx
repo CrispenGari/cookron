@@ -1,9 +1,9 @@
 import "react-native-gesture-handler";
 import React from "react";
-import { Text, View, StatusBar, LogBox } from "react-native";
+import { View, StatusBar, LogBox } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
-import { FONTS, Fonts } from "./src/constants";
+import { Fonts } from "./src/constants";
 import Routes from "./src/routes";
 import ReactQueryProvider from "./src/providers/ReactQueryProvider";
 import { usePlatform } from "./src/hooks";
@@ -30,7 +30,9 @@ const App = () => {
   if (!ready) return null;
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <StatusBar barStyle={"dark-content"} />
+      <StatusBar
+        barStyle={os === "android" ? "light-content" : "dark-content"}
+      />
       <ReactQueryProvider>
         <Routes />
       </ReactQueryProvider>

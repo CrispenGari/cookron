@@ -22,7 +22,6 @@ const Favorites: React.FunctionComponent<AppNavProps<"Favorites">> = ({
     (async () => {
       const res = await retrieve(KEYS.BOOK_MARKS);
       const data: Array<RecipeType> = res ? JSON.parse(res) : [];
-
       setBookmarks(data);
     })();
   }, []);
@@ -40,11 +39,11 @@ const Favorites: React.FunctionComponent<AppNavProps<"Favorites">> = ({
         }}
         style={{ flex: 1 }}
       >
-        {bookmarks.map((recipe, index) => (
+        {bookmarks.map((recipe, _index) => (
           <Recipe
             recipe={recipe}
             key={recipe.id}
-            index={index}
+            cardType="regular"
             navigation={navigation}
           />
         ))}

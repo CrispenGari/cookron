@@ -22,7 +22,10 @@ const FavoritesHeader: React.FunctionComponent<StackHeaderProps> = ({
       style={{
         backgroundColor: COLORS.secondary,
         height: width >= 600 ? 80 : 100,
-        justifyContent: "center",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingHorizontal: 10,
+        flexDirection: "row",
       }}
     >
       <View

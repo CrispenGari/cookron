@@ -9,7 +9,7 @@ import React from "react";
 import { BottomSheet } from "react-native-btr";
 import { useMediaQuery } from "../../../hooks/useMediaQuery";
 import { COLORS } from "../../../constants";
-import { Transition, Transitioning } from "react-native-reanimated";
+// import ReAnimated, { FadeIn, FadeOut, Easing } from "react-native-reanimated";
 import { CategoriesTabs } from "./CategoriesTabs";
 import { CategoriesHeader } from "./CategoriesHeader";
 import { MainCategoryType } from "../../../types";
@@ -49,7 +49,7 @@ const CreateEngineBottomSheet: React.FunctionComponent<Props> = ({
   }, [tab]);
 
   const onMomentumScrollBegin = (
-    e: NativeSyntheticEvent<NativeScrollEvent>
+    _e: NativeSyntheticEvent<NativeScrollEvent>
   ) => {
     Animated.sequence([
       Animated.timing(zIndex, {
@@ -64,7 +64,7 @@ const CreateEngineBottomSheet: React.FunctionComponent<Props> = ({
       }),
     ]).start();
   };
-  const onMomentumScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const onMomentumScrollEnd = (_e: NativeSyntheticEvent<NativeScrollEvent>) => {
     Animated.sequence([
       Animated.timing(zIndex, {
         duration: 300,
@@ -78,15 +78,6 @@ const CreateEngineBottomSheet: React.FunctionComponent<Props> = ({
       }),
     ]).start();
   };
-
-  const navTransition = (
-    <Transition.Together>
-      <Transition.In type="fade" durationMs={1000} />
-      <Transition.Change />
-      <Transition.Out type="fade" durationMs={1000} />
-    </Transition.Together>
-  );
-
   return (
     <BottomSheet
       visible={!!open}
@@ -109,9 +100,9 @@ const CreateEngineBottomSheet: React.FunctionComponent<Props> = ({
           }}
         >
           <CategoriesHeader tab={tab} />
-          <Transitioning.View transition={navTransition} ref={navRef}>
+          <View>
             <CategoriesTabs tab={tab} setTab={setTab} />
-          </Transitioning.View>
+          </View>
           <CategoryRecipes
             navigation={navigation}
             onMomentumScrollEnd={onMomentumScrollEnd}
@@ -143,7 +134,7 @@ const CreateEngineBottomSheet: React.FunctionComponent<Props> = ({
               ]}
               activeOpacity={0.7}
             >
-              <Ionicons name="ios-close" size={24} color={COLORS.tertiary} />
+              <Ionicons name="close" size={24} color={COLORS.tertiary} />
             </TouchableOpacity>
           </Animated.View>
         </SafeAreaView>
